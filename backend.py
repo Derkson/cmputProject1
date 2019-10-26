@@ -5,6 +5,7 @@ c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
 
+#determines if a person entered a valid username and password
 def login(username, password):
     c.execute('SELECT uid, pwd FROM users;')
     rows = c.fetchall()
@@ -12,11 +13,12 @@ def login(username, password):
     for tuple in rows:
         if(tuple[0].lower() == username.lower()):
             if(tuple[1] == password):
-                return True
-            return False
-    return False
+                return 0 #vaild username and password
+            return 1 #valid username, invalid password
+    return 2 #invalid username
 
 
+#determines if a person is an officer or not
 def officer(uid):
     c.execute('SELECT uid, utype FROM users;')
     rows = c.fetchall()
@@ -26,6 +28,9 @@ def officer(uid):
                 return True
     return False
 
+
+
+#Register a birth
 
 def main():
     conn.commit()
