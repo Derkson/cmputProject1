@@ -1,6 +1,32 @@
+from Tkinter import Tk, Button, Label
 import sqlite3
 import time
 
+def main():
+    root = Tk()
+    my_gui = MyFirstGUI(root)
+    root.mainloop()
+
+class MyFirstGUI:
+    def __init__(self, master):
+        self.master = master
+        master.title("A simple GUI")
+
+        self.label = Label(master, text="This is our first GUI!")
+        self.label.pack()
+
+        self.greet_button = Button(master, text="Greet", command=self.greet)
+        self.greet_button.pack()
+
+        self.close_button = Button(master, text="Close", command=master.quit)
+        self.close_button.pack()
+
+    def greet(self):
+        print("Greetings!")
+
+if __name__ == "__main__":
+    main()
+"""
 connection = None
 cursor = None
 
@@ -94,17 +120,11 @@ def enroll(student_id, course_id):
 
     current_date = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    """
     	Check that there is a spot in the course for this student.
-    """
 
-    """
         Register the student in the course.
-    """
 
-    """
     	Update the seats_available in the course table. (decrement)
-    """
 
     connection.commit()
     return
@@ -125,7 +145,4 @@ def main():
     connection.commit()
     connection.close()
     return
-
-
-if __name__ == "__main__":
-    main()
+"""
