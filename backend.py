@@ -17,6 +17,14 @@ def login(username, password):
     return False
 
 
+def officer(uid):
+    c.execute('SELECT uid, utype FROM users;')
+    rows = c.fetchall()
+    for tuple in rows:
+        if(tuple[0].lower() == uid.lower()):
+            if(tuple[1] == "o"):
+                return True
+    return False
 
 
 def main():
