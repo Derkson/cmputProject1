@@ -10,7 +10,7 @@ insert into persons values("Jacob", "Reckhard","1998-12-08","Edmonton, AB","404 
 
 --adding users, Chris is the only officer
 insert into users values(1, "lego", "o", "Chris", "Pontikes", "Edmonton");
-insert into users values(2, "jesus", "a", "Joshua", "Derkson", "Edmonton");
+insert into users values(2, "jesus", "a", "Josh", "Derkson", "Edmonton");
 insert into users values(3, "yeet", "a", "Alex", "Rostron", "Edmonton");
 insert into users values(4, "dnd", "a", "Brighton", "Greet", "Edmonton");
 insert into users values(5, "password", "a", "Jacob", "Reckhard", "Edmonton");
@@ -28,5 +28,3 @@ insert into registrations values(1, "1945-06-06", "1946-06-06", "TANK", "U003", 
 insert into registrations values(22, "2020-01-01", "2021-01-01", "yeet420", "U420", "Alex", "Rostron");
 insert into registrations values(23, "2019-02-04", "2020-02-04", "spdwgn1", "U078", "Brighton", "Greet");
 insert into registrations values(24, "2019-05-20", "2020-05-20", "eror404", "U404", "Jacob", "Reckhard");
-
-  
