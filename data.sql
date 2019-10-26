@@ -9,11 +9,11 @@ insert into persons values("Brighton", "Greet","1998-03-25","Edmonton, AB","69 6
 insert into persons values("Jacob", "Reckhard","1998-12-08","Edmonton, AB","404 404 Street","780-404-1234");
 
 --adding users, Chris is the only officer
-insert into users values(1, "lego", "o", "Chris", "Pontikes", "Edmonton");
-insert into users values(2, "jesus", "a", "Josh", "Derkson", "Edmonton");
-insert into users values(3, "yeet", "a", "Alex", "Rostron", "Edmonton");
-insert into users values(4, "dnd", "a", "Brighton", "Greet", "Edmonton");
-insert into users values(5, "password", "a", "Jacob", "Reckhard", "Edmonton");
+insert into users values("Chris", "lego", "o", "Chris", "Pontikes", "Edmonton");
+insert into users values("Josh", "jesus", "a", "Josh", "Derkson", "Edmonton");
+insert into users values("Alex", "yeet", "a", "Alex", "Rostron", "Edmonton");
+insert into users values("Brighton", "dnd", "a", "Brighton", "Greet", "Edmonton");
+insert into users values("Jacob", "password", "a", "Jacob", "Reckhard", "Edmonton");
 
 --giving all of us cars
 insert into vehicles values("U069", "Ford", "F150", 2015, "Red"); --Chris' Car

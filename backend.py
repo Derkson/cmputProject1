@@ -10,7 +10,7 @@ def login(username, password):
     rows = c.fetchall()
 
     for tuple in rows:
-        if(tuple[0] == username):
+        if(tuple[0].lower() == username.lower()):
             if(tuple[1] == password):
                 return True
             return False
