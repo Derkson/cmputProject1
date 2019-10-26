@@ -10,9 +10,14 @@ def login(username, password):
     rows = c.fetchall()
 
     for tuple in rows:
-        if(tuple[0] == username and tuple[1] == password):
-            return True
+        if(tuple[0] == username):
+            if(tuple[1] == password):
+                return True
+            return False
     return False
+
+
+
 
 def main():
     conn.commit()
