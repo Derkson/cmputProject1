@@ -1,27 +1,32 @@
-from Tkinter import Tk, Button, Label
+from Tkinter import *
 import sqlite3
 import time
 
 def main():
     root = Tk()
-    my_gui = MyFirstGUI(root)
+    my_gui = LoginGUI(root)
     root.mainloop()
 
-class MyFirstGUI:
+class LoginGUI:
     def __init__(self, master):
         self.master = master
-        master.title("A simple GUI")
+        master.title("Registry Database")
 
-        self.label = Label(master, text="This is our first GUI!")
-        self.label.pack()
+        Label(master, text="Registry Database Login:").grid(columnspan=4,sticky=W+E+S+N,rowspan=2)
+        Label(master, text="Username:").grid(column=0,row=3)
+        Label(master, text="Password:").grid(column=0,row=4)
 
-        self.greet_button = Button(master, text="Greet", command=self.greet)
-        self.greet_button.pack()
+        Button(master, text="Close", command=master.quit).grid(column=1,row=5)
+        Button(master, text="Login", command=self.login).grid(column=2,row=5)
 
-        self.close_button = Button(master, text="Close", command=master.quit)
-        self.close_button.pack()
+        self.usernameEntry = Entry(master)
+        self.usernameEntry.grid(column=2,columnspan=2,row=3)
 
-    def greet(self):
+        self.passwordEntry = Entry(master)
+        self.passwordEntry.grid(column=2,columnspan=2,row=4)
+
+    def login(self):
+
         print("Greetings!")
 
 if __name__ == "__main__":
