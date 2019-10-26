@@ -11,8 +11,8 @@ def login(username, password):
 
     for tuple in rows:
         if(tuple[0] == username and tuple[1] == password):
-            return 1
-    return 0
+            return True
+    return False
 
 def main():
     conn.commit()
