@@ -1,6 +1,6 @@
 from Tkinter import *
-import sqlite3
-import time
+from backend import *
+
 
 def main():
     root = Tk()
@@ -17,17 +17,27 @@ class LoginGUI:
         Label(master, text="Password:").grid(column=0,row=4)
 
         Button(master, text="Close", command=master.quit).grid(column=1,row=5)
-        Button(master, text="Login", command=self.login).grid(column=2,row=5)
+        Button(master, text="Login", command=self.loginClick).grid(column=2,row=5)
 
-        self.usernameEntry = Entry(master)
-        self.usernameEntry.grid(column=2,columnspan=2,row=3)
+        self.usernameEntry = StringVar()
+        Entry(master, textvariable=self.usernameEntry).grid(column=2,columnspan=2,row=3)
 
-        self.passwordEntry = Entry(master)
-        self.passwordEntry.grid(column=2,columnspan=2,row=4)
+        self.passwordEntry = StringVar()
+        Entry(master, textvariable=self.passwordEntry).grid(column=2,columnspan=2,row=4)
 
-    def login(self):
+    def loginClick(self):
+        loginCall = login(username=usernameEntry.get(),password=passwordEntry.get())
 
-        print("Greetings!")
+        if(loginCall == 2):
+            usernameEntry.set("Invalid Username")
+            return
+
+        if(loginCall == 1):
+            passwordEntry.set("Invalid Password")
+            return
+
+        # Here the user is logged in
+
 
 if __name__ == "__main__":
     main()
