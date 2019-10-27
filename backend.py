@@ -1,4 +1,5 @@
 import sqlite3
+import random
 global conn, c
 conn = sqlite3.connect('./miniproject1.db')
 c = conn.cursor()
@@ -28,8 +29,18 @@ def officer(uid):
                 return True
     return False
 
-
-
+def get_regno():
+    unique = False
+    while(unique == False):
+        regno = random.randint(1,1000)
+        #print(regno)
+        c.execute('SELECT regno FROM births')
+        rows = c.fetchall()
+        for x in rows:
+            if((int(str(x)[1:-2])) != regno):
+                unique = True
+    return regno
+    
 #Register a birth
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname):
     #regdate is today's date
@@ -58,6 +69,7 @@ def create_person(fname, lname, bdate, bplace, address, phone):
 
 
 def main():
+    print(get_regno())
     conn.commit()
     conn.close()
 
