@@ -4,160 +4,109 @@ from backend import *
 
 def main():
     root = Tk()
-    my_gui = LoginGUI(root)
+    LoginGUI(root)
     root.mainloop()
 
 class LoginGUI:
     def __init__(self, master):
         self.master = master
-        master.title("Registry Database")
 
-        Label(master, text="Registry Database Login:").grid(columnspan=4,sticky=W+E+S+N,rowspan=2)
-        Label(master, text="Username:").grid(column=0,row=3)
-        Label(master, text="Password:").grid(column=0,row=4)
+        self.titleLabel = Label(self.master, text="Registry Database Login:")
+        self.usernameLabel = Label(self.master, text="Username:")
+        self.passwordLabel = Label(self.master, text="Password:")
 
-        Button(master, text="Close", command=master.quit).grid(column=1,row=5)
-        Button(master, text="Login", command=self.loginClick).grid(column=2,row=5)
+        self.closeButton = Button(self.master, text="Close", command=master.quit)
+        self.loginButton = Button(self.master, text="Login", command=self.loginClick)
 
         self.usernameEntry = StringVar()
-        Entry(master, textvariable=self.usernameEntry).grid(column=2,columnspan=2,row=3)
+        self.userEntry = Entry(self.master, textvariable=self.usernameEntry)
 
         self.passwordEntry = StringVar()
-        Entry(master, textvariable=self.passwordEntry).grid(column=2,columnspan=2,row=4)
+        self.passEntry = Entry(self.master, textvariable=self.passwordEntry)
+
+        self.constructGrid()
+
+    def constructGrid(self):
+        self.master.title("Login")
+
+        self.titleLabel.grid(columnspan=4,sticky=W+E+S+N,rowspan=2)
+        self.usernameLabel.grid(column=0,row=3)
+        self.passwordLabel.grid(column=0,row=4)
+
+        self.closeButton.grid(column=1,row=5)
+        self.loginButton.grid(column=2,row=5)
+
+        self.usernameEntry.set("")
+        self.passwordEntry.set("")
+
+        self.userEntry.grid(column=2,columnspan=2,row=3)
+        self.passEntry.grid(column=2,columnspan=2,row=4)
+
+    def deconstructGrid(self):
+        self.titleLabel.grid_remove()
+        self.usernameLabel.grid_remove()
+        self.passwordLabel.grid_remove()
+        self.closeButton.grid_remove()
+        self.loginButton.grid_remove()
+        self.userEntry.grid_remove()
+        self.passEntry.grid_remove()
+
 
     def loginClick(self):
-        loginCall = login(username=usernameEntry.get(),password=passwordEntry.get())
+        loginCall = login(username=self.usernameEntry.get(),password=self.passwordEntry.get())
 
         if(loginCall == 2):
-            usernameEntry.set("Invalid Username")
+            self.usernameEntry.set("Invalid Username")
+            self.passwordEntry.set("")
             return
 
         if(loginCall == 1):
-            passwordEntry.set("Invalid Password")
+            self.passwordEntry.set("Invalid Password")
             return
 
         # Here the user is logged in
 
+        self.deconstructGrid()
+        if(officer(self.usernameEntry.get())):
+            OfficerMenuGUI(self.master, self.usernameEntry.get())
+        else:
+            AgentMenuGUI(self.master, self.usernameEntry.get())
+        self.master.mainloop()
+        self.constructGrid()
+
+
+class OfficerMenuGUI:
+    def __init__(self, master, username):
+        self.master = master
+        self.username = username
+        self.closeButton = Button(self.master, text="Close", command=self.back)
+        self.closeButton.grid()
+
+    def back(self):
+        self.closeButton.grid_forget()
+        self.master.quit()
+
+
+class AgentMenuGUI:
+    def __init__(self, master, username):
+        self.master = master
+        self.username = username
+
+        self.loginLabel = Label(self.master, text="User:")
+        self.userLabel = Label(self.master, text=self.username)
+
+        self.birthButton = Button(self.master,text="Register Birth",command=self.birth)
+        self.marriageButton = Button(self.master,text="Register Marriage",command=self.marriage)
+        self.registrationButton = Button(self.master,text="Renew Vehicle Resgistration",command=self.registration)
+        self.saleButton = Button(self.master,text="Process Bill of Sale",command=self.sale)
+        self.paymentButton = Button(self.master,text="Process Payment",command=self.payment)
+        self.driverButton = Button(self.master, text="View Driver Abstract", command=self.driver)
+
+        self.constructGrid()
+
+    def constructGrid(self):
+        return
+
 
 if __name__ == "__main__":
     main()
-"""
-connection = None
-cursor = None
-
-
-def connect(path):
-    global connection, cursor
-
-    connection = sqlite3.connect(path)
-    cursor = connection.cursor()
-    cursor.execute(' PRAGMA foreign_keys=ON; ')
-    connection.commit()
-    return
-
-
-def drop_tables():
-    global connection, cursor
-
-    drop_course = "DROP TABLE IF EXISTS course; "
-    drop_student = "DROP TABLE IF EXISTS student; "
-    drop_enroll = "DROP TABLE IF EXISTS enroll; "
-
-    cursor.execute(drop_enroll)
-    cursor.execute(drop_student)
-    cursor.execute(drop_course)
-
-
-def define_tables():
-    global connection, cursor
-
-    course_query = '''
-                        CREATE TABLE course (
-                                    course_id INTEGER,
-                                    title TEXT,
-                                    seats_available INTEGER,
-                                    PRIMARY KEY (course_id)
-                                    );
-                    '''
-
-    student_query = '''
-                        CREATE TABLE student (
-                                    student_id INTEGER,
-                                    name TEXT,
-                                    PRIMARY KEY (student_id)
-                                    );
-                    '''
-
-    enroll_query = '''
-                    CREATE TABLE enroll (
-                                student_id INTEGER,
-                                course_id INTEGER,
-                                enroll_date DATE,
-                                PRIMARY KEY (student_id, course_id),
-                                FOREIGN KEY(student_id) REFERENCES student(student_id),
-                                FOREIGN KEY(course_id) REFERENCES course(course_id)
-                                );
-                '''
-
-    cursor.execute(course_query)
-    cursor.execute(student_query)
-    cursor.execute(enroll_query)
-    connection.commit()
-
-    return
-
-
-def insert_data():
-    global connection, cursor
-
-    insert_courses = '''
-                        INSERT INTO course(course_id, title, seats_available) VALUES
-                            (1, 'CMPUT 291', 200),
-                            (2, 'CMPUT 391', 100),
-                            (3, 'CMPUT 101', 300);
-                    '''
-
-    insert_students = '''
-                            INSERT INTO student(student_id, name) VALUES
-                                    (1509106, 'Jeff'),
-                                    (1409106, 'Alex'),
-                                    (1609106, 'Mike');
-                            '''
-
-    cursor.execute(insert_courses)
-    cursor.execute(insert_students)
-    connection.commit()
-    return
-
-
-def enroll(student_id, course_id):
-    global connection, cursor
-
-    current_date = time.strftime("%Y-%m-%d %H:%M:%S")
-
-    	Check that there is a spot in the course for this student.
-
-        Register the student in the course.
-
-    	Update the seats_available in the course table. (decrement)
-
-    connection.commit()
-    return
-
-
-def main():
-    global connection, cursor
-
-    path = "./register.db"
-    connect(path)
-    drop_tables()
-    define_tables()
-    insert_data()
-
-    #### your part ####
-    # register all students in all courses.
-
-    connection.commit()
-    connection.close()
-    return
-"""
