@@ -1,4 +1,5 @@
 import sqlite3
+import random
 global conn, c
 conn = sqlite3.connect('./miniproject1.db')
 c = conn.cursor()
@@ -28,11 +29,47 @@ def officer(uid):
                 return True
     return False
 
-
-
+def get_regno():
+    unique = False
+    while(unique == False):
+        regno = random.randint(1,1000)
+        #print(regno)
+        c.execute('SELECT regno FROM births')
+        rows = c.fetchall()
+        for x in rows:
+            if((int(str(x)[1:-2])) != regno):
+                unique = True
+    return regno
+    
 #Register a birth
+def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname):
+    #regdate is today's date
+    #will have to create a new row in birth and in person
+    #regplace is city of user
+    #create a unique regno
+    #address and phone number of babies are the same as mothers
+    #if parent not in database, get info on parent, only first and last name are necessary
+    pass
+
+#first make a function to see if the person exists
+def exists(fname, lname):
+    c.execute('SELECT fname, lname FROM persons;')
+    rows = c.fetchall()
+    for tuple in rows:
+        if(tuple[0].lower() == fname.lower() and tuple[1].lower() == lname.lower()):
+            return True
+    return False
+
+#if the person doesn't exist, we must add them to the database
+#might also be used for when the birth is registered
+def create_person(fname, lname, bdate, bplace, address, phone):
+    insertions = (fname, lname, bdate, bplace, address, phone)
+    c.execute('INSERT INTO persons VALUES(?,?,?,?,?,?);',insertions)
+    conn.commit()
+
 
 def main():
+    print(get_regno())
     conn.commit()
     conn.close()
 

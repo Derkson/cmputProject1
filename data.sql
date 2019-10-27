@@ -8,6 +8,21 @@ insert into persons values("Alex", "Rostron","1998-01-24","Edmonton, AB","69 420
 insert into persons values("Brighton", "Greet","1998-03-25","Edmonton, AB","69 69 Street","780-123-1234");
 insert into persons values("Jacob", "Reckhard","1998-12-08","Edmonton, AB","404 404 Street","780-404-1234");
 
+
+--now we gotta register parents (boi)
+insert into persons values("Mother", "Pontikes", "1964-03-05", "Ticonderoga", "123 69 street", "780-555-5555");
+insert into persons values("Father", "Pontikes", "1965-11-04", "Edmonton", "123 69 street", "780-123-2222");
+insert into persons values("Mama", "Derkson", "0789-03-30", "Constantinople", "Ye olde home", "780-444-4444");
+insert into persons values("Papa", "Derkson", "0777-04-12", "Pangea", "Ye Older home", "780-111-1111");
+insert into persons values("Mom", "Rostron", "1980-07-21", "Edmonton", "11243 58ave", "780-333-3456");
+insert into persons values("Doctor", "Rostron", "1980-09-22", "Edmonton", "11243 58ave", "780-444-1234");
+
+  
+--we were now registered at birth, so there is proof on paper that we exist
+insert into births values(69, "Chris", "Pontikes", "1998-02-28", "Markham, ON", "M", "Father", "Pontikes", "Mother", "Pontikes");
+insert into births values(42, "Josh", "Derkson", "1012-05-30", "Transylvania", "M", "Papa", "Derkson", "Mama", "Derkson");
+insert into births values(420, "Alex", "Rostron", "1998-01-28", "Edmonton, AB", "M", "Doctor", "Rostron", "Mom", "Rostron");
+
 --adding users, Chris is the only officer
 insert into users values("Chris", "lego", "o", "Chris", "Pontikes", "Edmonton");
 insert into users values("Josh", "jesus", "a", "Josh", "Derkson", "Edmonton");
