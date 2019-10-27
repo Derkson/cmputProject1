@@ -31,6 +31,11 @@ def officer(uid):
 
 
 #Register a birth
+def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname):
+    #will have to create a new row in birth and in person
+    #regplace is city of user
+    #create a unique regno 
+    pass
 
 def main():
     conn.commit()
