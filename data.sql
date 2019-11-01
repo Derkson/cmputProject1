@@ -17,11 +17,11 @@ insert into persons values("Papa", "Derkson", "0777-04-12", "Pangea", "Ye Older 
 insert into persons values("Mom", "Rostron", "1980-07-21", "Edmonton", "11243 58ave", "780-333-3456");
 insert into persons values("Doctor", "Rostron", "1980-09-22", "Edmonton", "11243 58ave", "780-444-1234");
 
-  
+
 --we were now registered at birth, so there is proof on paper that we exist
-insert into births values(69, "Chris", "Pontikes", "1998-02-28", "Markham, ON", "M", "Father", "Pontikes", "Mother", "Pontikes");
-insert into births values(42, "Josh", "Derkson", "1012-05-30", "Transylvania", "M", "Papa", "Derkson", "Mama", "Derkson");
-insert into births values(420, "Alex", "Rostron", "1998-01-28", "Edmonton, AB", "M", "Doctor", "Rostron", "Mom", "Rostron");
+insert into births values(1, "Chris", "Pontikes", "1998-02-28", "Markham, ON", "M", "Father", "Pontikes", "Mother", "Pontikes");
+insert into births values(2, "Josh", "Derkson", "1012-05-30", "Transylvania", "M", "Papa", "Derkson", "Mama", "Derkson");
+insert into births values(6, "Alex", "Rostron", "1998-01-28", "Edmonton, AB", "M", "Doctor", "Rostron", "Mom", "Rostron");
 
 --adding users, Chris is the only officer
 insert into users values("Chris", "lego", "o", "Chris", "Pontikes", "Edmonton");
