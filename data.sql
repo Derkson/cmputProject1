@@ -24,11 +24,11 @@ insert into births values(2, "Josh", "Derkson", "1012-05-30", "Transylvania", "M
 insert into births values(6, "Alex", "Rostron", "1998-01-28", "Edmonton, AB", "M", "Doctor", "Rostron", "Mom", "Rostron");
 
 --adding users, Chris is the only officer
-insert into users values("Chris", "lego", "o", "Chris", "Pontikes", "Edmonton");
-insert into users values("Josh", "jesus", "a", "Josh", "Derkson", "Edmonton");
-insert into users values("Alex", "yeet", "a", "Alex", "Rostron", "Edmonton");
-insert into users values("Brighton", "dnd", "a", "Brighton", "Greet", "Edmonton");
-insert into users values("Jacob", "password", "a", "Jacob", "Reckhard", "Edmonton");
+insert into users values("U100", "lego", "o", "Chris", "Pontikes", "Edmonton");
+insert into users values("U007", "jesus", "a", "Josh", "Derkson", "Edmonton");
+insert into users values("U420", "yeet", "a", "Alex", "Rostron", "Edmonton");
+insert into users values("U069", "dnd", "a", "Brighton", "Greet", "Edmonton");
+insert into users values("U404", "password", "a", "Jacob", "Reckhard", "Edmonton");
 
 --giving all of us cars
 insert into vehicles values("U069", "Ford", "F150", 2015, "Red"); --Chris' Car

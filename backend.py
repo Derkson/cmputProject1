@@ -1,71 +1,52 @@
 import sqlite3
 import random
+import datetime
+import create
+import validation
 global conn, c
 path = './miniproject1.db'
 conn = sqlite3.connect(path)
 c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
-
-#determines if a person entered a valid username and password
-def login(username, password):
-    c.execute('SELECT uid, pwd FROM users;')
-    rows = c.fetchall()
-
-    for tuple in rows:
-        if(tuple[0].lower() == username.lower()):
-            if(tuple[1] == password):
-                return 0 #vaild username and password
-            return 1 #valid username, invalid password
-    return 2 #invalid username
-
-
-#determines if a person is an officer or not
-def officer(uid):
-    c.execute('SELECT uid, utype FROM users;')
-    rows = c.fetchall()
-    for tuple in rows:
-        if(tuple[0].lower() == uid.lower()):
-            if(tuple[1] == "o"):
-                return True
-    return False
-
 #generates a random registration number
-def make_regno():
-    regno = random.randint(1,10)
-    c.execute('SELECT regno FROM births;')
-    rows = c.fetchall()
-    for (x,) in rows:
-        if(x == regno):
-            return make_regno()
 
 
-#Register a birth
-def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname):
+#Register a birth, complete???
+def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
     #regdate is today's date
-    #will have to create a new row in birth and in person
-    #regplace is city of user
+    regdate = datetime.datetime.now()
+    #regplace is city of user, need to figure out who our user is
+    city = get_city_of_user(uid)
     #create a unique regno
+    regno = make_regno("births")
+
     #address and phone number of babies are the same as mothers
-    #if parent not in database, get info on parent, only first and last name are necessary
-    pass
+    c.execute('''SELECT DISTINCT phone, address
+                 FROM persons
+                 WHERE fname =:firstname
+                 AND lname =: lastname;''',
+                 {"firstname":fname, "lastname":lname})
 
-#first make a function to see if the person exists
-def persons_exists(fname, lname):
-    c.execute('SELECT fname, lname FROM persons;')
     rows = c.fetchall()
-    for tuple in rows:
-        if(tuple[0].lower() == fname.lower() and tuple[1].lower() == lname.lower()):
-            return True
-    return False
+    phone = rows[0]
+    address = rows[1]
 
-#if the person doesn't exist, we must add them to the database
-#might also be used for when the birth is registered
-def create_person(fname, lname, bdate, bplace, address, phone):
-    insertions = (fname, lname, bdate, bplace, address, phone)
-    c.execute('INSERT INTO persons VALUES(?,?,?,?,?,?);',insertions)
+    create_person(fname, lname, bdate, bplace, address, phone)
+    create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname)
     conn.commit()
 
+#register a marriage, complete???
+def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
+    regdate = datetime.datetime.now() #regdate is today
+    regno = make_regno("marriages") #unique regno
+    city = get_city_of_user(uid) #regplace is city of users
+    create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
+    conn.commit()
+
+
+def renew_vehicle(regno):
+    pass
 
 def main():
     conn.commit()
