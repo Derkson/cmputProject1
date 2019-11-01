@@ -1,7 +1,8 @@
 import sqlite3
 import random
 global conn, c
-conn = sqlite3.connect('./miniproject1.db')
+path = './miniproject1.db'
+conn = sqlite3.connect(path)
 c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
@@ -29,18 +30,16 @@ def officer(uid):
                 return True
     return False
 
-def get_regno():
-    unique = False
-    while(unique == False):
-        regno = random.randint(1,1000)
-        #print(regno)
-        c.execute('SELECT regno FROM births')
-        rows = c.fetchall()
-        for x in rows:
-            if((int(str(x)[1:-2])) != regno):
-                unique = True
-    return regno
-    
+#generates a random registration number
+def make_regno():
+    regno = random.randint(1,10)
+    c.execute('SELECT regno FROM births;')
+    rows = c.fetchall()
+    for (x,) in rows:
+        if(x == regno):
+            return make_regno()
+
+
 #Register a birth
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname):
     #regdate is today's date
@@ -52,7 +51,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
     pass
 
 #first make a function to see if the person exists
-def exists(fname, lname):
+def persons_exists(fname, lname):
     c.execute('SELECT fname, lname FROM persons;')
     rows = c.fetchall()
     for tuple in rows:
@@ -69,7 +68,6 @@ def create_person(fname, lname, bdate, bplace, address, phone):
 
 
 def main():
-    print(get_regno())
     conn.commit()
     conn.close()
 
