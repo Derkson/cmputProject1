@@ -177,7 +177,7 @@ class AgentMenuGUI:
 
     def marriage(self):
         self.deconstructGrid()
-        AgentGUIs.MarriageGUI(master=self.master,username=self.username)
+        MarriageGUI(master=self.master,username=self.username)
         self.master.mainloop()
         self.constructGrid()
         pass

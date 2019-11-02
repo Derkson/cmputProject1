@@ -158,9 +158,10 @@ def driver_abstract(fname, lname, asc, lifetime):
 
 
 def main():
-    driver_abstract("Chris", "Pontikes", False, False)
-    driver_abstract("Josh", "Derkson", False, False)
-    driver_abstract("Alex", "Rostron", True, True)
+    print(get_city_of_user("U007"))
+    #driver_abstract("Chris", "Pontikes", False, False)
+    #driver_abstract("Josh", "Derkson", False, False)
+    #driver_abstract("Alex", "Rostron", True, True)
     conn.commit()
     conn.close()
 

@@ -1,5 +1,6 @@
 from Tkinter import *
 from backend import *
+from lowerAgentGUIs import *
 
 class BirthGUI:
     """docstring for BirthGUI.
@@ -132,98 +133,6 @@ class BirthGUI:
         self.master.quit()
         pass
 
-class NewPersonGUI:
-    """docstring for NewPersonGUI.
-    Used when the parents of a child or one of the partners
-    in a marriage don't exist in the Database"""
-
-    def __init__(self, master, title):
-        self.master = master
-        self.title = title
-
-        self.backButton = Button(self.master, text="Back",command=self.quit)
-        self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
-
-        self.titleLabel = Label(self.master, text=title[0])
-        self.FirstNameLabel = Label(self.master, text="First Name:")
-        self.FNLabel = Label(self.master, text=title[1])
-        self.LastNameLabel = Label(self.master, text="Last Name:")
-        self.LNLabel = Label(self.master, text=title[2])
-        self.BDLabel = Label(self.master, text="Birth Date:")
-        self.BPLabel = Label(self.master, text="Birth Place:")
-        self.addressLabel = Label(self.master, text="Address:")
-        self.phoneLabel = Label(self.master, text="Phone: Number")
-
-        self.BD = StringVar()
-        self.BP = StringVar()
-        self.address = StringVar()
-        self.phone = StringVar()
-        self.BDEntry = Entry(self.master, textvariable=self.BD)
-        self.BPEntry = Entry(self.master, textvariable=self.BP)
-        self.addressEntry = Entry(self.master, textvariable=self.address)
-        self.phoneEntry = Entry(self.master, textvariable=self.phone)
-
-        self.constructGrid()
-        pass
-
-    def constructGrid(self):
-        self.master.title("New Person")
-
-        self.backButton.grid()
-        self.submitButton.grid(column=1,row=0)
-
-        self.titleLabel.grid(column=0,columnspan=2,row=1)
-        self.FirstNameLabel.grid(column=0,row=2)
-        self.FNLabel.grid(column=1,row=2)
-        self.LastNameLabel.grid(column=0,row=3)
-        self.LNLabel.grid(column=1,row=3)
-        self.BDLabel.grid(column=0,row=4)
-        self.BPLabel.grid(column=0,row=5)
-        self.addressLabel.grid(column=0,row=6)
-        self.phoneLabel.grid(column=0,row=7)
-
-        self.BD.set("YYYY-MM-DD")
-        self.BP.set("")
-        self.address.set("")
-        self.phone.set("")
-
-        self.BDEntry.grid(column=1,row=4)
-        self.BPEntry.grid(column=1,row=5)
-        self.addressEntry.grid(column=1,row=6)
-        self.phoneEntry.grid(column=1,row=7)
-        pass
-
-    def deconstructGrid(self):
-
-        self.backButton.grid_remove()
-        self.submitButton.grid_remove()
-
-        self.titleLabel.grid_remove()
-        self.FirstNameLabel.grid_remove()
-        self.FNLabel.grid_remove()
-        self.LastNameLabel.grid_remove()
-        self.LNLabel.grid_remove()
-        self.BDLabel.grid_remove()
-        self.BPLabel.grid_remove()
-        self.addressLabel.grid_remove()
-        self.phoneLabel.grid_remove()
-
-        self.BDEntry.grid_remove()
-        self.BPEntry.grid_remove()
-        self.addressEntry.grid_remove()
-        self.phoneEntry.grid_remove()
-        pass
-
-    def submitCall(self):
-        create_person(fname=self.title[1], lname=self.title[2], bdate=self.BD.get(),
-        bplace=self.BP.get(), address=self.address.get(), phone=self.phone.get())
-        pass
-
-    def quit(self):
-        self.deconstructGrid()
-        self.master.quit()
-        pass
-
 class MarriageGUI:
     """docstring for MarriageGUI.
     Used when creating a marriage"""
@@ -324,8 +233,7 @@ class RegistrationGUI:
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
 
-        self.RegistrationLabel = Label(self.master, text="Registration Number:")
-        self.PromptLabel = Label(self.master, text="Reg. Number not in database")
+        self.RegistrationLabel = Label(self.master, text="RegNo:")
 
         self.Registration = StringVar()
         self.RegistrationEntry = Entry(self.master, textvariable=self.Registration)
@@ -350,14 +258,242 @@ class RegistrationGUI:
         self.backButton.grid_remove()
         self.submitButton.grid_remove()
 
-        self.PromptLabel.grid_remove()
         self.RegistrationLabel.grid_remove()
         self.RegistrationEntry.grid_remove()
         pass
 
     def submitCall(self):
-        # TODO: self.PromptLabel.grid(column=0,columnspan=2,row=1)
+        if not regno_exists(self.Registration.get()):
+            self.Registration.set("Invalid RegNo")
+            return
         renew_vehicle(self.Registration.get())
+        self.Registration.set("Success")
+        pass
+
+    def quit(self):
+        self.deconstructGrid()
+        self.master.quit()
+        pass
+
+class SaleGUI:
+    """docstring for SaleGUI.
+    Used for processing a vehicle sale"""
+
+    def __init__(self, master, username):
+        self.master = master
+        self.username = username
+
+        self.backButton = Button(self.master, text="Back",command=self.quit)
+        self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
+
+        self.VINLabel = Label(self.master, text="Vehicle VIN:")
+        self.SFNameLabel = Label(self.master, text="Seller Fist Name:")
+        self.SLNameLabel = Label(self.master, text="Seller Last Name:")
+        self.BFNameLabel = Label(self.master, text="Buyer Fist Name:")
+        self.BLNameLabel = Label(self.master, text="Buyer Last Name:")
+        self.PlateLabel = Label(self.master, text="New Plate Number:")
+
+        self.VIN = StringVar()
+        self.SFN = StringVar()
+        self.SLN = StringVar()
+        self.BFN = StringVar()
+        self.BLN = StringVar()
+        self.Plate = StringVar()
+        self.VINEntry = Entry(self.master, textvariable=self.VIN)
+        self.SFNEntry = Entry(self.master, textvariable=self.SFN)
+        self.SLNEntry = Entry(self.master, textvariable=self.SLN)
+        self.BFNEntry = Entry(self.master, textvariable=self.BFN)
+        self.BLNEntry = Entry(self.master, textvariable=self.BLN)
+        self.PlateEntry = Entry(self.master, textvariable=self.Plate)
+
+        self.constructGrid()
+        pass
+
+    def constructGrid(self):
+        self.master.title("Bill of Sale")
+
+        self.backButton.grid()
+        self.submitButton.grid(column=1,row=0)
+
+        self.VINLabel.grid(column=0,row=1)
+        self.SFNameLabel.grid(column=0,row=2)
+        self.SLNameLabel.grid(column=0,row=3)
+        self.BFNameLabel.grid(column=0,row=4)
+        self.BLNameLabel.grid(column=0,row=5)
+        self.PlateLabel.grid(column=0,row=6)
+
+        self.VIN.set("")
+        self.SFN.set("")
+        self.SLN.set("")
+        self.BFN.set("")
+        self.BLN.set("")
+        self.Plate.set("")
+        self.VINEntry.grid(column=1,row=1)
+        self.SFNEntry.grid(column=1,row=2)
+        self.SLNEntry.grid(column=1,row=3)
+        self.BFNEntry.grid(column=1,row=4)
+        self.BLNEntry.grid(column=1,row=5)
+        self.PlateEntry.grid(column=1,row=6)
+        pass
+
+    def deconstructGrid(self):
+
+        self.backButton.grid_remove()
+        self.submitButton.grid_remove()
+
+        self.VINLabel.grid_remove()
+        self.SFNameLabel.grid_remove()
+        self.SLNameLabel.grid_remove()
+        self.BFNameLabel.grid_remove()
+        self.BLNameLabel.grid_remove()
+        self.PlateLabel.grid_remove()
+
+        self.VINEntry.grid_remove()
+        self.SFNEntry.grid_remove()
+        self.SLNEntry.grid_remove()
+        self.BFNEntry.grid_remove()
+        self.BLNEntry.grid_remove()
+        self.PlateEntry.grid_remove()
+        pass
+
+    def submitCall(self):
+        # TODO: Vin exists, Seller is owner
+        if not persons_exists(fname=self.SFN.get(),lname=self.SLN.get()):
+            self.SFN.set("Seller not in database")
+            self.SLN.set("")
+            return
+
+        if not persons_exists(fname=self.BFN.get(),lname=self.BLN.get()):
+            self.BFN.set("Buyer not in database")
+            self.BLN.set("")
+            return
+
+        self.quit()
+        pass
+
+    def quit(self):
+        self.deconstructGrid()
+        self.master.quit()
+        pass
+
+class PaymentGUI:
+    """docstring for PaymentGUI.
+    Used to pay for a ticket"""
+
+    def __init__(self, master, username):
+        self.master = master
+        self.username = username
+
+        self.backButton = Button(self.master, text="Back",command=self.quit)
+        self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
+
+        self.TicketLabel = Label(self.master, text="Ticket Number:")
+        self.AmountLabel = Label(self.master, text="Amount Paid:")
+
+        self.Ticket = StringVar()
+        self.Amount = StringVar()
+        self.TicketEntry = Entry(self.master, textvariable=self.Ticket)
+        self.AmountEntry = Entry(self.master, textvariable=self.Amount)
+
+        self.constructGrid()
+        pass
+
+    def constructGrid(self):
+        self.master.title("Ticket Payment")
+
+        self.backButton.grid()
+        self.submitButton.grid(column=1,row=0)
+
+        self.TicketLabel.grid(column=0,row=1)
+        self.AmountLabel.grid(column=0,row=2)
+
+        self.Ticket.set("")
+        self.Amount.set("")
+        self.TicketEntry.grid(column=1,row=1)
+        self.AmountEntry.grid(column=1,row=2)
+        pass
+
+    def deconstructGrid(self):
+
+        self.backButton.grid_remove()
+        self.submitButton.grid_remove()
+
+        self.TicketLabel.grid_remove()
+        self.AmountLabel.grid_remove()
+
+        self.TicketEntry.grid_remove()
+        self.AmountEntry.grid_remove()
+        pass
+
+    def submitCall(self):
+        # TODO: submit
+        self.quit()
+        pass
+
+    def quit(self):
+        self.deconstructGrid()
+        self.master.quit()
+        pass
+
+class DriverGUI:
+    """docstring for DriverGUI
+    Called for getting a drivers abstract"""
+
+    def __init__(self, master, username):
+        self.master = master
+        self.username = username
+
+        self.backButton = Button(self.master, text="Back",command=self.quit)
+        self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
+
+        self.FirstNameLabel = Label(self.master, text="First Name:")
+        self.LastNameLabel = Label(self.master, text="Last Name:")
+
+        self.FN = StringVar()
+        self.FNEntry = Entry(self.master, textvariable=self.FN)
+        self.LN = StringVar()
+        self.LNEntry = Entry(self.master, textvariable=self.LN)
+
+        self.constructGrid()
+        pass
+
+    def constructGrid(self):
+        self.master.title("Get Driver Abstract")
+
+        self.backButton.grid()
+        self.submitButton.grid(column=1,row=0)
+
+        self.FirstNameLabel.grid(column=0,row=1)
+        self.LastNameLabel.grid(column=0,row=2)
+
+        self.FN.set("")
+        self.FNEntry.grid(column=1,row=1)
+        self.LN.set("")
+        self.LNEntry.grid(column=1,row=2)
+        pass
+
+    def deconstructGrid(self):
+
+        self.backButton.grid_remove()
+        self.submitButton.grid_remove()
+
+        self.FirstNameLabel.grid_remove()
+        self.LastNameLabel.grid_remove()
+
+        self.FNEntry.grid_remove()
+        self.LNEntry.grid_remove()
+        pass
+
+    def submitCall(self):
+        if not persons_exists(fname=self.FN.get(),lname=self.LN.get()):
+            self.FN.set("Driver not in database")
+            self.LN.set("")
+            return
+
+        self.deconstructGrid()
+        DriverAbstractGUI(master=self.master,username=self.username,driver=(self.FN.get(),self.LN.get()))
+        self.master.mainloop()
+        self.constructGrid()
         pass
 
     def quit(self):
