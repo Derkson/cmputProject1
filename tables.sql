@@ -102,4 +102,3 @@ create table users (
   primary key(uid),
   foreign key (fname,lname) references persons
 );
-  
