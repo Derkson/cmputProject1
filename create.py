@@ -45,10 +45,8 @@ def create_payment(tno, pdate, amount):
     c.execute("INSERT INTO payments VALUES(?,?,?)", insertions)
 
 def get_city_of_user(uid):
-    c.execute('''SELECT city
-                 FROM users
-                 WHERE uid=:userID;''',
-                 {"userID":uid})
-
-    city = c.fetchone()
-    return city[0]
+    c.execute('''SELECT city, uid FROM users''')
+    city = c.fetchall()
+    for x in city:
+        if(x[1].lower() == uid.lower()):
+            return x[0]
