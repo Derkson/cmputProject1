@@ -56,3 +56,14 @@ def vin_exists(vin):
         if(x[0] == vin):
             return True
     return False
+
+def is_current_owner(fname, lname, vin):
+    c.execute('''SELECT fname, lname, vin, regdate
+                 FROM registrations
+                 ORDER BY regdate desc;''')
+    info = c.fetchone()
+
+    if(info[0].lower()==fname and info[1].lower()==lname and info[2]==vin):
+        return True
+        
+    return False
