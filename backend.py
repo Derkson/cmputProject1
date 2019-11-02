@@ -1,6 +1,6 @@
 import sqlite3
 import random
-from datetime import date
+from datetime import date, timedelta
 import create
 import validation
 global conn, c
@@ -12,7 +12,7 @@ c.execute(' PRAGMA foreign_keys=ON ')
 #generates a random registration number
 
 
-#Register a birth, complete???
+#Register a birth, complete
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
     #regdate is today's date
     regdate = date.today()
@@ -36,7 +36,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
     create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname)
     conn.commit()
 
-#register a marriage, complete???
+#register a marriage, complete
 def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     regdate = date.today() #regdate is today
     regno = make_regno("marriages") #unique regno
@@ -45,6 +45,7 @@ def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     conn.commit()
 
 
+#complete, not pretty, can make prettier later
 def renew_vehicle(regno):
     #if registration expires today or is expired, new expiry is one year from today
     #else just add one year to the expiry date
@@ -56,25 +57,25 @@ def renew_vehicle(regno):
 
     rows = c.fetchone()
     expdate = rows[2]
-    print(expdate)
     year = int(expdate[0:4])
     month = int(expdate[5:7])
     day = int(expdate[8:10])
 
     if(date(year, month, day) > date.today()):
-        print("not expired")
         newexp = date(year +1, month, day)
-        print("new expiry date: ", newexp)
     else:
-        print("expired")
-        newexp = date.today() 
-        print("new expiry date: ", newexp)
+        newexp = date.today() + timedelta(days = 365)
+
+    c.execute('''UPDATE registrations
+                 SET expiry=:newexpiry
+                 WHERE expiry=:expdate
+                 AND regno=:registrationsNumber;''',
+                 {"newexpiry":newexp, "expdate":expdate, "registrationsNumber":regno})
+    conn.commit()
 
 
 
 def main():
-    renew_vehicle(20)
-    renew_vehicle(1)
     conn.commit()
     conn.close()
 
