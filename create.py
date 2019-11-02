@@ -44,6 +44,11 @@ def create_registration(regno, regdate, expiry, plate, vin, fname, lname):
     c.execute('INSERT INTO registrations VALUES(?,?,?,?,?,?,?);', insertions)
     conn.commit()
 
+def create_payment(tno, pdate, amount):
+    insertions = (tno, pdate, amount)
+    c.execute("INSERT INTO payments VALUES(?,?,?)", insertions)
+    conn.commit()
+
 def get_city_of_user(uid):
     c.execute('''SELECT city
                  FROM users

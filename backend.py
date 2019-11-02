@@ -99,6 +99,43 @@ def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
     newexpdate = date.today() + timedelta(days = 365)
     create_registration(newregno, newregdate, newexpdate, newplate, vin, new_fname, new_lname)
 
+#have a solution here, may need to change it
+def process_payment(tno, amount):
+    #can make multiple payments to pay off ticket, but sum cannot exceed total
+    pdate = date.today()
+    create_payment(tno, pdate, amount)
+
+    c.execute('''SELECT fine
+                 FROM tickets
+                 WHERE tno=:tno;''',
+                 {"tno":tno})
+
+    row = c.fetchone()
+    print("old amount owing: ", int(row[0]))
+
+    newAmount = int(row[0]) - amount
+    if(newAmount < 0):
+        print("paid too much money")
+        return
+    elif(newAmount == 0):
+        print("all paid up")
+    print("new amount owing: ", newAmount)
+
+    c.execute('''UPDATE tickets
+                 SET fine=:amountowe
+                 WHERE tno=:tno;''',
+                 {"amountowe":newAmount, "tno":tno})
+
+
+def driver_abstract(fname, lname):
+    #get number of ticekts
+    #number of demerit notices
+    #total number of demerit points, within two years and lifetime
+    #tickets can be ordered ascending or descending by date
+    #each ticket will display tno, vdate, desc, fine, regno, make of car, model of car 
+
+    pass
+
 def main():
     conn.commit()
     conn.close()
