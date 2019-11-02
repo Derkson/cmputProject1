@@ -1,75 +1,105 @@
 import sqlite3
 import random
+from datetime import date, timedelta
+from create import *
+from validation import *
 global conn, c
-conn = sqlite3.connect('./miniproject1.db')
+path = './miniproject1.db'
+conn = sqlite3.connect(path)
 c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
-
-#determines if a person entered a valid username and password
-def login(username, password):
-    c.execute('SELECT uid, pwd FROM users;')
-    rows = c.fetchall()
-
-    for tuple in rows:
-        if(tuple[0].lower() == username.lower()):
-            if(tuple[1] == password):
-                return 0 #vaild username and password
-            return 1 #valid username, invalid password
-    return 2 #invalid username
-
-
-#determines if a person is an officer or not
-def officer(uid):
-    c.execute('SELECT uid, utype FROM users;')
-    rows = c.fetchall()
-    for tuple in rows:
-        if(tuple[0].lower() == uid.lower()):
-            if(tuple[1] == "o"):
-                return True
-    return False
-
-def get_regno():
-    unique = False
-    while(unique == False):
-        regno = random.randint(1,1000)
-        #print(regno)
-        c.execute('SELECT regno FROM births')
-        rows = c.fetchall()
-        for x in rows:
-            if((int(str(x)[1:-2])) != regno):
-                unique = True
-    return regno
-    
-#Register a birth
-def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname):
+#Register a birth, complete
+def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
     #regdate is today's date
-    #will have to create a new row in birth and in person
+    regdate = date.today()
     #regplace is city of user
+    city = get_city_of_user(uid)
     #create a unique regno
+    regno = make_regno("births")
+
     #address and phone number of babies are the same as mothers
-    #if parent not in database, get info on parent, only first and last name are necessary
-    pass
+    c.execute('''SELECT DISTINCT phone, address
+                 FROM persons
+                 WHERE fname =:firstname
+                 AND lname =: lastname;''',
+                 {"firstname":fname, "lastname":lname})
 
-#first make a function to see if the person exists
-def exists(fname, lname):
-    c.execute('SELECT fname, lname FROM persons;')
     rows = c.fetchall()
-    for tuple in rows:
-        if(tuple[0].lower() == fname.lower() and tuple[1].lower() == lname.lower()):
-            return True
-    return False
+    phone = rows[0]
+    address = rows[1]
 
-#if the person doesn't exist, we must add them to the database
-#might also be used for when the birth is registered
-def create_person(fname, lname, bdate, bplace, address, phone):
-    insertions = (fname, lname, bdate, bplace, address, phone)
-    c.execute('INSERT INTO persons VALUES(?,?,?,?,?,?);',insertions)
+    create_person(fname, lname, bdate, bplace, address, phone)
+    create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname)
     conn.commit()
 
+#register a marriage, complete
+def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
+    regdate = date.today() #regdate is today
+    regno = make_regno("marriages") #unique regno
+    city = get_city_of_user(uid) #regplace is city of users
+    create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
+    conn.commit()
+
+#complete, not pretty, can make prettier later
+def renew_vehicle(regno):
+    #if registration expires today or is expired, new expiry is one year from today
+    #else just add one year to the expiry date
+    #'case when' in sql
+    c.execute('''SELECT *
+                 FROM registrations
+                 WHERE regno=:registrationNumber;''',
+                 {"registrationNumber":regno})
+
+    rows = c.fetchone()
+    expdate = rows[2]
+    year = int(expdate[0:4])
+    month = int(expdate[5:7])
+    day = int(expdate[8:10])
+
+    if(date(year, month, day) > date.today()):
+        newexp = date(year +1, month, day)
+    else:
+        newexp = date.today() + timedelta(days = 365)
+
+    c.execute('''UPDATE registrations
+                 SET expiry=:newexpiry
+                 WHERE expiry=:expdate
+                 AND regno=:registrationsNumber;''',
+                 {"newexpiry":newexp, "expdate":expdate, "registrationsNumber":regno})
+    conn.commit()
+
+#pretty well works i guess
+def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
+    if(persons_exists(new_fname, new_lname) == False):
+        print("well shit, cant sell to someone that dont exist")
+        return
+    elif(persons_exists(o_fname, o_lname) == False):
+        print("That owner doesnt even exist bro")
+        return
+
+    c.execute('''SELECT fname, lname
+                 FROM registrations
+                 WHERE fname=:o_fname
+                 AND lname=:o_lname
+                 AND vin=:vin;''',
+                 {"vin":vin,"o_fname":o_fname, "o_lname":o_lname})
+    rows = c.fetchone()
+    if(not rows):
+        print("Error in vin")
+        return
+
+    print(rows[0], rows[1])
+    c.execute('''DELETE FROM registrations
+                 WHERE vin=:vin''',
+                 {"vin":vin})
+
+    newregno = make_regno("vehicles")
+    newregdate = date.today()
+    newexpdate = date.today() + timedelta(days = 365)
+    create_registration(newregno, newregdate, newexpdate, newplate, vin, new_fname, new_lname)
 
 def main():
-    print(get_regno())
     conn.commit()
     conn.close()
 
