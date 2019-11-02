@@ -1,6 +1,6 @@
 import sqlite3
 import random
-import datetime
+from datetime import date
 import validation
 global conn, c
 path = './miniproject1.db'
@@ -40,7 +40,7 @@ def create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_l
 def get_city_of_user(uid):
     c.execute('''SELECT city
                  FROM users
-                 WHERE uid =:userID;''',
+                 WHERE uid=:userID;''',
                  {"userID":uid})
 
     city = c.fetchone()

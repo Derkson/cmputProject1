@@ -1,6 +1,6 @@
 import sqlite3
 import random
-import datetime
+from datetime import date
 import create
 global conn, c
 path = './miniproject1.db'

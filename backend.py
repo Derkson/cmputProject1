@@ -1,6 +1,6 @@
 import sqlite3
 import random
-import datetime
+from datetime import date
 import create
 import validation
 global conn, c
@@ -15,7 +15,7 @@ c.execute(' PRAGMA foreign_keys=ON ')
 #Register a birth, complete???
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
     #regdate is today's date
-    regdate = datetime.datetime.now()
+    regdate = date.today()
     #regplace is city of user, need to figure out who our user is
     city = get_city_of_user(uid)
     #create a unique regno
@@ -38,7 +38,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
 
 #register a marriage, complete???
 def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
-    regdate = datetime.datetime.now() #regdate is today
+    regdate = date.today() #regdate is today
     regno = make_regno("marriages") #unique regno
     city = get_city_of_user(uid) #regplace is city of users
     create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
@@ -46,9 +46,35 @@ def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
 
 
 def renew_vehicle(regno):
-    pass
+    #if registration expires today or is expired, new expiry is one year from today
+    #else just add one year to the expiry date
+    #case when in sql
+    c.execute('''SELECT *
+                 FROM registrations
+                 WHERE regno=:registrationNumber;''',
+                 {"registrationNumber":regno})
+
+    rows = c.fetchone()
+    expdate = rows[2]
+    print(expdate)
+    year = int(expdate[0:4])
+    month = int(expdate[5:7])
+    day = int(expdate[8:10])
+
+    if(date(year, month, day) > date.today()):
+        print("not expired")
+        newexp = date(year +1, month, day)
+        print("new expiry date: ", newexp)
+    else:
+        print("expired")
+        newexp = date.today() 
+        print("new expiry date: ", newexp)
+
+
 
 def main():
+    renew_vehicle(20)
+    renew_vehicle(1)
     conn.commit()
     conn.close()
 
