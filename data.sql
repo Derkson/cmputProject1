@@ -45,7 +45,14 @@ insert into registrations values(23, "2019-02-04", "2020-02-04", "spdwgn1", "U07
 insert into registrations values(24, "2019-05-20", "2020-05-20", "eror404", "U404", "Jacob", "Reckhard");
 
 --need to add some tickets now
-insert into tickets values(1, 20, 69, "dumb bastard", "2017-11-12" );
+insert into tickets values(1, 20, 69, "dumb bastard", "2016-11-12" );
 insert into tickets values(2, 20, 420, "drunk boi", "2019-07-09");
 insert into tickets values(3, 22, 100, "swearing in Christian Minecraft server", "2019-11-01");
 insert into tickets values(4, 22, 69, "yeeting too hard on a longboard", "2019-11-01");
+
+--gotta give some of us demerits
+insert into demeritNotices values("2019-11-04", "Chris", "Pontikes", 7, "you fucked up");
+insert into demeritNotices values("2018-04-20", "Chris", "Pontikes", 5, "stop alcohol");
+insert into demeritNotices values("1984-06-07", "Josh", "Derkson", 4, "too much Jesus");
+insert into demeritNotices values("2000-12-27", "Josh", "Derkson", 2, "still more jesus");
+insert into demeritNotices values("2017-02-17", "Alex", "Rostron", 4, "yeet bitch");
