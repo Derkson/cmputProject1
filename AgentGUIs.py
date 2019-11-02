@@ -62,7 +62,7 @@ class BirthGUI:
         self.CFNEntry.grid(column=1,row=1)
         self.CLN.set("")
         self.CLNEntry.grid(column=1,row=2)
-        self.gender.set("")
+        self.gender.set("M or F")
         self.genderEntry.grid(column=1,row=3)
         self.BD.set("YYYY-MM-DD")
         self.BDEntry.grid(column=1,row=4)
@@ -104,6 +104,37 @@ class BirthGUI:
         pass
 
     def submitCall(self):
-        if exists(fname=MFN.get(),lname=MLN.get()):
-            pass
+        if ~persons_exists(fname=MFN.get(),lname=MLN.get()):
+            launchNewPerson(title=("Mother",MFN.get(),MLN.get()))
+        if ~persons_exists(fname=FFN.get(),lname=FLN.get()):
+            launchNewPerson(title=("Father",FFN.get(),FLN.get()))
+
+        register_birth(fname=self.CFN.get(), lname=self.CLN.get(), gender=self.gender.get(),
+        bdate=self.BD.get(), bplace=self.BP.get(), f_fname=FFN.get(), f_lname=FLN.get(),
+        m_fname=self.MFN.get(), m_lname=self.MLN.get(), uid=self.username)
+
+        pass
+
+    def launchNewPerson(self, title):
+        self.deconstructGrid()
+        NewPersonGUI(master=self.master,title=title)
+        self.master.mainloop()
+        self.constructGrid()
+        pass
+
+class NewPersonGUI:
+    """docstring for NewPersonGUI.
+    Used when the parents of a child or one of the partners
+    in a marriage don't exist in the Database"""
+
+    def __init__(self, master, title):
+        self.master = master
+        self.title = title
+
+        self.titleLabel = Label(self.master, text=title[0])
+        self.FirstNameLabel = Label(self.master, text="First Name:")
+        self.FNLabel = Label(self.master, text=title[1])
+        self.LastNameLabel = Label(self.master, text="Last Name:")
+        self.LNLabel = Label(self.master, text=title[2])
+        self.
         pass

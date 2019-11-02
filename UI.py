@@ -82,8 +82,8 @@ class OfficerMenuGUI:
         self.master = master
         self.username = username
 
-        self.loginLabel = Label(self.master, text="User:",sticky=E)
-        self.userLabel = Label(self.master, text=self.username, sticky=W)
+        self.loginLabel = Label(self.master, text="User:")
+        self.userLabel = Label(self.master, text=self.username)
 
         self.backButton = Button(self.master,text="LogOut",command=self.master.quit)
 
