@@ -123,44 +123,96 @@ def process_payment(tno, amount):
                  WHERE tno=:tno;''',
                  {"amountowe":newAmount, "tno":tno})
 
-
-def driver_abstract(fname, lname, asc, lifetime):
-    #get number of ticekts, demerit points, demerit notices and number of tickets
+'''
+Order of info in list
+tuple of number of tickets, lifetime
+tuple of number of demerit points and sum of points, lifetime
+tuple of number of tickets, past 2 years
+tuple of number of demerit points and sum of points, past 2 years
+tickets with info
+    tno, vdate, violation, fine amount, make of car, model of car
+'''
+def driver_abstract(fname, lname, asc):
+    #get number of ticekts, demerit points, demerit notices
     #all within two years or lifetime
 
-    numtickets = c.fetchone()
-    print("number of tickets for",fname, lname, numtickets[0])
-    print()
+    #ticket number lifetime
+    c.execute('''SELECT count(t.tno)
+                 FROM tickets t, persons p, registrations r
+                 WHERE t.regno = r.regno
+                 AND r.fname=:firstname
+                 AND r.lname=:lastname
+                 AND r.fname = p.fname
+                 AND r.lname = p.lname;''',
+                {"firstname":fname, "lastname":lname})
 
+    ticketnum_life = c.fetchall()
+    c.execute('''SELECT count(*), sum(d.points)
+                 FROM demeritNotices d, persons p
+                 WHERE d.fname = p.fname
+                 AND d.lname = p.lname
+                 AND p.fname=:firstname
+                 AND p.lname=:lastname;''',
+                 {"firstname":fname, "lastname":lname})
+    demeritinfo_life = c.fetchall()
 
-    #number of demerit notices
-    #total number of demerit points, within two years and lifetime
+    c.execute('''SELECT count(t.tno)
+                 FROM tickets t, persons p, registrations r
+                 WHERE t.regno = r.regno
+                 AND r.fname=:firstname
+                 AND r.lname=:lastname
+                 AND r.fname = p.fname
+                 AND r.lname = p.lname
+                 AND t.vdate > date("now", "-2 years");''',
+                {"firstname":fname, "lastname":lname})
 
-    points = c.fetchone()
-    print("number of Demerit Notices for", fname, lname, points[0])
-    print("total number of Demerit Points for", fname, lname, points[1])
-    print()
+    ticketnum_2years = c.fetchall()
+    c.execute('''SELECT count(*), sum(d.points)
+                 FROM demeritNotices d, persons p
+                 WHERE d.fname = p.fname
+                 AND d.lname = p.lname
+                 AND p.fname=:firstname
+                 AND p.lname=:lastname
+                 AND d.ddate > date("now", "-2 years");''',
+                 {"firstname":fname, "lastname":lname})
+    demeritinfo_2years = c.fetchall()
 
-
-    #each ticket will display tno, vdate, desc, fine, regno, make of car, model of car
-    #tickets can be ordered ascending or descending by date
-
+    #given ticket info, can order asc or desc by date
+    if(asc == True):
+        c.execute('''SELECT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
+                     FROM tickets t, vehicles v, registrations r, persons p
+                     WHERE t.regno = r.regno
+                     AND r.vin = v.vin
+                     AND p.fname=:firstname
+                     AND p.lname=:lastname
+                     AND r.fname = p.fname
+                     AND r.lname = p.lname
+                     ORDER BY t.vdate asc;''',
+                     {"firstname":fname, "lastname":lname})
+    elif(asc == False):
+        c.execute('''SELECT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
+                     FROM tickets t, vehicles v, registrations r, persons p
+                     WHERE t.regno = r.regno
+                     AND r.vin = v.vin
+                     AND p.fname=:firstname
+                     AND p.lname=:lastname
+                     AND r.fname = p.fname
+                     AND r.lname = p.lname
+                     ORDER BY t.vdate desc;''',
+                     {"firstname":fname, "lastname":lname})
     ticketinfo = c.fetchall()
-    if not ticketinfo:
-        print(fname, lname, "good boi with no tickets")
-
-    #printing ticket info
-    for x in ticketinfo:
-        print("ticket number:", x[0], "violation date:", x[1], "violation:", x[2])
-        print("fine amount:", x[3], "registration number:", x[4])
-        print("Make:", x[5], "Model:", x[6])
+    joinedlist = ticketnum_life + demeritinfo_life + ticketnum_2years + demeritinfo_2years + ticketinfo
+    print(joinedlist)
+    #view no more than 5 at a time
     print()
 
 
 def main():
-    driver_abstract("Chris", "Pontikes", False, False)
-    driver_abstract("Josh", "Derkson", False, False)
-    driver_abstract("Alex", "Rostron", True, True)
+
+    driver_abstract("Chris", "Pontikes",  False)
+    driver_abstract("Josh", "Derkson", True)
+    driver_abstract("Alex", "Rostron", False)
+
     conn.commit()
     conn.close()
 
