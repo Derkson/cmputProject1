@@ -1,22 +1,19 @@
 import sqlite3
 import random
 from datetime import date, timedelta
-import create
-import validation
+from create import *
+from validation import *
 global conn, c
 path = './miniproject1.db'
 conn = sqlite3.connect(path)
 c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
-#generates a random registration number
-
-
 #Register a birth, complete
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
     #regdate is today's date
     regdate = date.today()
-    #regplace is city of user, need to figure out who our user is
+    #regplace is city of user
     city = get_city_of_user(uid)
     #create a unique regno
     regno = make_regno("births")
@@ -44,12 +41,11 @@ def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
     conn.commit()
 
-
 #complete, not pretty, can make prettier later
 def renew_vehicle(regno):
     #if registration expires today or is expired, new expiry is one year from today
     #else just add one year to the expiry date
-    #case when in sql
+    #'case when' in sql
     c.execute('''SELECT *
                  FROM registrations
                  WHERE regno=:registrationNumber;''',
@@ -73,7 +69,35 @@ def renew_vehicle(regno):
                  {"newexpiry":newexp, "expdate":expdate, "registrationsNumber":regno})
     conn.commit()
 
+#pretty well works i guess
+def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
+    if(persons_exists(new_fname, new_lname) == False):
+        print("well shit, cant sell to someone that dont exist")
+        return
+    elif(persons_exists(o_fname, o_lname) == False):
+        print("That owner doesnt even exist bro")
+        return
 
+    c.execute('''SELECT fname, lname
+                 FROM registrations
+                 WHERE fname=:o_fname
+                 AND lname=:o_lname
+                 AND vin=:vin;''',
+                 {"vin":vin,"o_fname":o_fname, "o_lname":o_lname})
+    rows = c.fetchone()
+    if(not rows):
+        print("Error in vin")
+        return
+
+    print(rows[0], rows[1])
+    c.execute('''DELETE FROM registrations
+                 WHERE vin=:vin''',
+                 {"vin":vin})
+
+    newregno = make_regno("vehicles")
+    newregdate = date.today()
+    newexpdate = date.today() + timedelta(days = 365)
+    create_registration(newregno, newregdate, newexpdate, newplate, vin, new_fname, new_lname)
 
 def main():
     conn.commit()

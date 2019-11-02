@@ -14,6 +14,8 @@ def make_regno(table):
         c.execute('SELECT regno FROM births;')
     elif(table == "marriages"):
         c.execute('SELECT regno FROM marriages;')
+    elif(table == "vehicles"):
+        c.execute('SELECT regno FROM registrations')
     else:
         return -1
 
@@ -35,6 +37,11 @@ def create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lnam
 def create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname):
     insertions = (regno, regdate, regplace, p1_fname, p2_lname, p2_fname, p2_lname)
     c.execute('INSERT INTO marriages VALUES(?,?,?,?,?,?,?);', insertions)
+    conn.commit()
+
+def create_registration(regno, regdate, expiry, plate, vin, fname, lname):
+    insertions = (regno, regdate, expiry, plate, vin, fname, lname)
+    c.execute('INSERT INTO registrations VALUES(?,?,?,?,?,?,?);', insertions)
     conn.commit()
 
 def get_city_of_user(uid):

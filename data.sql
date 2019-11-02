@@ -43,3 +43,9 @@ insert into registrations values(1, "1945-06-06", "1946-06-06", "TANK", "U003", 
 insert into registrations values(22, "2020-01-01", "2021-01-01", "yeet420", "U420", "Alex", "Rostron");
 insert into registrations values(23, "2019-02-04", "2020-02-04", "spdwgn1", "U078", "Brighton", "Greet");
 insert into registrations values(24, "2019-05-20", "2020-05-20", "eror404", "U404", "Jacob", "Reckhard");
+
+--need to add some tickets now
+insert into tickets values(1, 20, 69, "dumb bastard", "2017-11-12" );
+insert into tickets values(2, 20, 420, "drunk boi", "2019-07-09");
+insert into tickets values(3, 22, 100, "swearing in Christian Minecraft server", "2019-11-01");
+insert into tickets values(4, 22, 69, "yeeting too hard on a longboard", "2019-11-01");
