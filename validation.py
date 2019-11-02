@@ -47,4 +47,23 @@ def regno_exists(regno):
     for tuple in rows:
         if(tuple[0] == regno):
             return True
-    return False 
+    return False
+
+def vin_exists(vin):
+    c.execute("SELECT vin, FROM vehicles")
+    rows = c.fetchall()
+    for x in rows:
+        if(x[0] == vin):
+            return True
+    return False
+
+def is_current_owner(fname, lname, vin):
+    c.execute('''SELECT fname, lname, vin, regdate
+                 FROM registrations
+                 ORDER BY regdate desc;''')
+    info = c.fetchone()
+
+    if(info[0].lower()==fname and info[1].lower()==lname and info[2]==vin):
+        return True
+        
+    return False
