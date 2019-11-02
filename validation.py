@@ -47,4 +47,12 @@ def regno_exists(regno):
     for tuple in rows:
         if(tuple[0] == regno):
             return True
-    return False 
+    return False
+
+def vin_exists(vin):
+    c.execute("SELECT vin, FROM vehicles")
+    rows = c.fetchall()
+    for x in rows:
+        if(x[0] == vin):
+            return True
+    return False
