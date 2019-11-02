@@ -1,6 +1,8 @@
 from Tkinter import *
 from backend import *
 
+from AgentGUIs import *
+from OfficerGUIs import *
 
 def main():
     root = Tk()
@@ -51,9 +53,9 @@ class LoginGUI:
         self.userEntry.grid_remove()
         self.passEntry.grid_remove()
 
-
     def loginClick(self):
-        loginCall = login(username=self.usernameEntry.get(),password=self.passwordEntry.get())
+        self.tempUsername = self.usernameEntry.get()
+        loginCall = login(username=self.tempUsername,password=self.passwordEntry.get())
 
         if(loginCall == 2):
             self.usernameEntry.set("Invalid Username")
@@ -68,9 +70,9 @@ class LoginGUI:
 
         self.deconstructGrid()
         if(officer(self.usernameEntry.get())):
-            OfficerMenuGUI(self.master, self.usernameEntry.get())
+            OfficerMenuGUI(master=self.master, username=self.tempUsername)
         else:
-            AgentMenuGUI(self.master, self.usernameEntry.get())
+            AgentMenuGUI(master=self.master, username=self.tempUsername)
         self.master.mainloop()
         self.constructGrid()
 
@@ -79,12 +81,41 @@ class OfficerMenuGUI:
     def __init__(self, master, username):
         self.master = master
         self.username = username
-        self.closeButton = Button(self.master, text="Close", command=self.back)
-        self.closeButton.grid()
 
-    def back(self):
-        self.closeButton.grid_forget()
-        self.master.quit()
+        self.loginLabel = Label(self.master, text="User:",sticky=E)
+        self.userLabel = Label(self.master, text=self.username, sticky=W)
+
+        self.backButton = Button(self.master,text="LogOut",command=self.master.quit)
+
+        self.ticketButton = Button(self.master,text="Issue a Ticket",command=self.ticket)
+        self.ownerButton = Button(self.master,text="Find a Car Owner",command=self.owner)
+
+        self.constructGrid()
+
+    def constructGrid(self):
+        self.master.title("Traffic Officer Menu")
+
+        self.loginLabel.grid()
+        self.backButton.grid(column=0,row=1)
+        self.userLabel.grid(column=1,row=0)
+
+        self.ticketButton.grid(column=1,row=1)
+        self.ownerButton.grid(column=1,row=2)
+        pass
+
+    def deconstructGrid(self):
+        self.loginLabel.grid_remove()
+        self.userLabel.grid_remove()
+        self.backButton.grid_remove()
+        self.ticketButton.grid_remove()
+        self.ownerButton.grid_remove()
+        pass
+
+    def ticket(self):
+        pass
+
+    def owner(self):
+        pass
 
 
 class AgentMenuGUI:
@@ -92,8 +123,10 @@ class AgentMenuGUI:
         self.master = master
         self.username = username
 
-        self.loginLabel = Label(self.master, text="User:")
-        self.userLabel = Label(self.master, text=self.username)
+        self.loginLabel = Label(self.master, text="User:",sticky=E)
+        self.userLabel = Label(self.master, text=self.username, sticky=W)
+
+        self.backButton = Button(self.master,text="LogOut",command=self.master.quit)
 
         self.birthButton = Button(self.master,text="Register Birth",command=self.birth)
         self.marriageButton = Button(self.master,text="Register Marriage",command=self.marriage)
@@ -105,7 +138,52 @@ class AgentMenuGUI:
         self.constructGrid()
 
     def constructGrid(self):
+        self.master.title("Registry Agent Menu")
+
+        self.loginLabel.grid()
+        self.backButton.grid(column=0,row=1)
+        self.userLabel.grid(column=1,row=0)
+        self.birthButton.grid(column=1,row=1)
+        self.marriageButton.grid(column=1,row=2)
+        self.registrationButton.grid(column=1,row=3)
+        self.saleButton.grid(column=1,row=4)
+        self.paymentButton.grid(column=1,row=5)
+        self.driverButton.grid(column=1,row=6)
         return
+
+    def deconstructGrid(self):
+        self.loginLabel.grid_remove()
+        self.userLabel.grid_remove()
+        self.backButton.grid_remove()
+        self.birthButton.grid_remove()
+        self.marriageButton.grid_remove()
+        self.registrationButton.grid_remove()
+        self.saleButton.grid_remove()
+        self.paymentButton.grid_remove()
+        self.driverButton.grid_remove()
+        return
+
+    def birth(self):
+        self.deconstructGrid()
+        AgentGUIs.BirthGUI(master=self.master,username=self.username)
+        self.master.mainloop()
+        self.constructGrid()
+        pass
+
+    def marriage(self):
+        pass
+
+    def registration(self):
+        pass
+
+    def sale(self):
+        pass
+
+    def payment(self):
+        pass
+
+    def driver(self):
+        pass
 
 
 if __name__ == "__main__":
