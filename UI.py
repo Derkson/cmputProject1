@@ -85,7 +85,7 @@ class OfficerMenuGUI:
         self.loginLabel = Label(self.master, text="User:")
         self.userLabel = Label(self.master, text=self.username)
 
-        self.backButton = Button(self.master,text="LogOut",command=self.master.quit)
+        self.backButton = Button(self.master,text="LogOut",command=self.quit)
 
         self.ticketButton = Button(self.master,text="Issue a Ticket",command=self.ticket)
         self.ownerButton = Button(self.master,text="Find a Car Owner",command=self.owner)
@@ -117,16 +117,21 @@ class OfficerMenuGUI:
     def owner(self):
         pass
 
+    def quit(self):
+        self.deconstructGrid()
+        self.master.quit()
+        pass
+
 
 class AgentMenuGUI:
     def __init__(self, master, username):
         self.master = master
         self.username = username
 
-        self.loginLabel = Label(self.master, text="User:",sticky=E)
-        self.userLabel = Label(self.master, text=self.username, sticky=W)
+        self.loginLabel = Label(self.master, text="User:")
+        self.userLabel = Label(self.master, text=self.username)
 
-        self.backButton = Button(self.master,text="LogOut",command=self.master.quit)
+        self.backButton = Button(self.master,text="LogOut",command=self.quit)
 
         self.birthButton = Button(self.master,text="Register Birth",command=self.birth)
         self.marriageButton = Button(self.master,text="Register Marriage",command=self.marriage)
@@ -165,15 +170,23 @@ class AgentMenuGUI:
 
     def birth(self):
         self.deconstructGrid()
-        AgentGUIs.BirthGUI(master=self.master,username=self.username)
+        BirthGUI(master=self.master,username=self.username)
         self.master.mainloop()
         self.constructGrid()
         pass
 
     def marriage(self):
+        self.deconstructGrid()
+        AgentGUIs.MarriageGUI(master=self.master,username=self.username)
+        self.master.mainloop()
+        self.constructGrid()
         pass
 
     def registration(self):
+        self.deconstructGrid()
+        RegistrationGUI(master=self.master,username=self.username)
+        self.master.mainloop()
+        self.constructGrid()
         pass
 
     def sale(self):
@@ -183,6 +196,11 @@ class AgentMenuGUI:
         pass
 
     def driver(self):
+        pass
+
+    def quit(self):
+        self.deconstructGrid()
+        self.master.quit()
         pass
 
 
