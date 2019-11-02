@@ -31,7 +31,6 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
 
     create_person(fname, lname, bdate, bplace, address, phone)
     create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname)
-    conn.commit()
 
 #register a marriage, complete
 def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
@@ -39,7 +38,6 @@ def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     regno = make_regno("marriages") #unique regno
     city = get_city_of_user(uid) #regplace is city of users
     create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
-    conn.commit()
 
 #complete, not pretty, can make prettier later
 def renew_vehicle(regno):
@@ -67,7 +65,6 @@ def renew_vehicle(regno):
                  WHERE expiry=:expdate
                  AND regno=:registrationsNumber;''',
                  {"newexpiry":newexp, "expdate":expdate, "registrationsNumber":regno})
-    conn.commit()
 
 #pretty well works i guess
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
@@ -127,16 +124,43 @@ def process_payment(tno, amount):
                  {"amountowe":newAmount, "tno":tno})
 
 
-def driver_abstract(fname, lname):
-    #get number of ticekts
+def driver_abstract(fname, lname, asc, lifetime):
+    #get number of ticekts, demerit points, demerit notices and number of tickets
+    #all within two years or lifetime
+
+    numtickets = c.fetchone()
+    print("number of tickets for",fname, lname, numtickets[0])
+    print()
+
+
     #number of demerit notices
     #total number of demerit points, within two years and lifetime
-    #tickets can be ordered ascending or descending by date
-    #each ticket will display tno, vdate, desc, fine, regno, make of car, model of car 
 
-    pass
+    points = c.fetchone()
+    print("number of Demerit Notices for", fname, lname, points[0])
+    print("total number of Demerit Points for", fname, lname, points[1])
+    print()
+
+
+    #each ticket will display tno, vdate, desc, fine, regno, make of car, model of car
+    #tickets can be ordered ascending or descending by date
+
+    ticketinfo = c.fetchall()
+    if not ticketinfo:
+        print(fname, lname, "good boi with no tickets")
+
+    #printing ticket info
+    for x in ticketinfo:
+        print("ticket number:", x[0], "violation date:", x[1], "violation:", x[2])
+        print("fine amount:", x[3], "registration number:", x[4])
+        print("Make:", x[5], "Model:", x[6])
+    print()
+
 
 def main():
+    driver_abstract("Chris", "Pontikes", False, False)
+    driver_abstract("Josh", "Derkson", False, False)
+    driver_abstract("Alex", "Rostron", True, True)
     conn.commit()
     conn.close()
 
