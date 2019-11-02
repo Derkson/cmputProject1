@@ -39,3 +39,12 @@ def persons_exists(fname, lname):
         if(tuple[0].lower() == fname.lower() and tuple[1].lower() == lname.lower()):
             return True
     return False
+
+
+def regno_exists(regno):
+    c.execute('SELECT regno FROM registrations;')
+    rows = c.fetchall()
+    for tuple in rows:
+        if(tuple[0] == regno):
+            return True
+    return False 
