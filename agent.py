@@ -37,7 +37,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
 
 #register a marriage, complete, can make prettier
 def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
-    regdate = date.today() #regdate is today
+    regdate = datetime.date.today() #regdate is today
     regno = make_regno("marriages") #unique regno
     city = get_city_of_user(uid) #regplace is city of users
     create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)

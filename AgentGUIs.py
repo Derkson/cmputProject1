@@ -203,8 +203,14 @@ class MarriageGUI:
         self.second = (self.SecondFN.get(),self.SecondLN.get())
         if not persons_exists(fname=self.first[0],lname=self.first[1]):
             self.launchNewPerson(title=("First Partner",self.first[0],self.first[1]))
+            if not persons_exists(self.first[0],self.first[1]):
+                self.FirstFN.set("Aborted Marriage")
+                return
         if not persons_exists(fname=self.second[0],lname=self.second[1]):
             self.launchNewPerson(title=("Second Partner",self.second[0],self.second[1]))
+            if not persons_exists(self.second[0],self.second[1]):
+                self.FirstFN.set("Aborted Marriage")
+                return
 
         register_marriage(p1_fname=self.FirstFN.get(), p1_lname=self.FirstLN.get(), p2_fname=self.SecondFN.get(),
         p2_lname=self.SecondLN.get(), uid=self.username)
@@ -263,8 +269,12 @@ class RegistrationGUI:
         pass
 
     def submitCall(self):
-        if not regno_exists(self.Registration.get()):
-            self.Registration.set("Invalid RegNo")
+        try:
+            if not regno_exists(int(self.Registration.get())):
+                self.Registration.set("Invalid RegNo")
+                return
+        except ValueError:
+            self.Registration.set("Not a number")
             return
         renew_vehicle(self.Registration.get())
         self.Registration.set("Success")

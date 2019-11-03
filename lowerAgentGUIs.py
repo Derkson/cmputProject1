@@ -86,6 +86,9 @@ class NewPersonGUI:
     def submitCall(self):
         create_person(fname=self.title[1], lname=self.title[2], bdate=self.BD.get(),
         bplace=self.BP.get(), address=self.address.get(), phone=self.phone.get())
+        if not persons_exists(fname=self.title[1], lname=self.title[2]):
+            self.phone.set("ERROR: Person not made")
+            return
         self.quit()
         pass
 

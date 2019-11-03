@@ -39,6 +39,7 @@ def regno_exists(regno):
     c.execute('SELECT regno FROM registrations;')
     rows = c.fetchall()
     for tuple in rows:
+        print(tuple)
         if(tuple[0] == regno):
             return True
     return False
