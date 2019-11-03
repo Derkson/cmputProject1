@@ -190,12 +190,24 @@ class AgentMenuGUI:
         pass
 
     def sale(self):
+        self.deconstructGrid()
+        SaleGUI(master=self.master,username=self.username)
+        self.master.mainloop()
+        self.constructGrid()
         pass
 
     def payment(self):
+        self.deconstructGrid()
+        PaymentGUI(master=self.master,username=self.username)
+        self.master.mainloop()
+        self.constructGrid()
         pass
 
     def driver(self):
+        self.deconstructGrid()
+        DriverGUI(master=self.master,username=self.username)
+        self.master.mainloop()
+        self.constructGrid()
         pass
 
     def quit(self):
