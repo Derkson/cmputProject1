@@ -19,12 +19,14 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
     #create a unique regno
     regno = make_regno("births")
 
+    m_fname = m_fname.lower()
+    m_lname = m_lname.lower()
     #address and phone number of babies are the same as mothers
     c.execute('''SELECT DISTINCT phone, address
                  FROM persons
-                 WHERE fname =:firstname
-                 AND lname =: lastname;''',
-                 {"firstname":fname, "lastname":lname})
+                 WHERE lower(fname) =:firstname
+                 AND lower(lname) =: lastname;''',
+                 {"firstname":m_fname, "lastname":m_lname})
 
     rows = c.fetchall()
     phone = rows[0]
@@ -119,7 +121,7 @@ tuple of number of demerit points and sum of points, past 2 years
 tickets with info
     tno, vdate, violation, fine amount, make of car, model of car
 '''
-def driver_abstract(fname, lname, asc):
+def driver_abstract(fname, lname):
     #get number of ticekts, demerit points, demerit notices
     #all within two years or lifetime
 
@@ -165,28 +167,16 @@ def driver_abstract(fname, lname, asc):
     demeritinfo_2years = c.fetchall()
 
     #given ticket info, can order asc or desc by date
-    if(asc == True):
-        c.execute('''SELECT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
-                     FROM tickets t, vehicles v, registrations r, persons p
-                     WHERE t.regno = r.regno
-                     AND r.vin = v.vin
-                     AND p.fname=:firstname
-                     AND p.lname=:lastname
-                     AND r.fname = p.fname
-                     AND r.lname = p.lname
-                     ORDER BY t.vdate asc;''',
-                     {"firstname":fname, "lastname":lname})
-    elif(asc == False):
-        c.execute('''SELECT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
-                     FROM tickets t, vehicles v, registrations r, persons p
-                     WHERE t.regno = r.regno
-                     AND r.vin = v.vin
-                     AND p.fname=:firstname
-                     AND p.lname=:lastname
-                     AND r.fname = p.fname
-                     AND r.lname = p.lname
-                     ORDER BY t.vdate desc;''',
-                     {"firstname":fname, "lastname":lname})
+    c.execute('''SELECT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
+                 FROM tickets t, vehicles v, registrations r, persons p
+                 WHERE t.regno = r.regno
+                 AND r.vin = v.vin
+                 AND p.fname=:firstname
+                 AND p.lname=:lastname
+                 AND r.fname = p.fname
+                 AND r.lname = p.lname
+                 ORDER BY t.vdate asc;''',
+                 {"firstname":fname, "lastname":lname})
     ticketinfo = c.fetchall()
     joinedlist = ticketnum_life + demeritinfo_life + ticketnum_2years + demeritinfo_2years + ticketinfo
     print(joinedlist)
