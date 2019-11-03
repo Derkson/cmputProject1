@@ -114,39 +114,39 @@ def driver_abstract(fname, lname):
     c.execute('''SELECT count(t.tno)
                  FROM tickets t, persons p, registrations r
                  WHERE t.regno = r.regno
-                 AND r.fname=:firstname
-                 AND r.lname=:lastname
-                 AND r.fname = p.fname
-                 AND r.lname = p.lname;''',
+                 AND lower(r.fname)=:lower(firstname)
+                 AND lower(r.lname)=:lower(lastname)
+                 AND lower(r.fname) = lower(p.fname)
+                 AND lower(r.lname) = lower(p.lname);''',
                 {"firstname":fname, "lastname":lname})
 
     ticketnum_life = c.fetchall()
     c.execute('''SELECT count(*), sum(d.points)
                  FROM demeritNotices d, persons p
-                 WHERE d.fname = p.fname
-                 AND d.lname = p.lname
-                 AND p.fname=:firstname
-                 AND p.lname=:lastname;''',
+                 WHERE lower(d.fname) = lower(p.fname)
+                 AND lower(d.lname) = lower(p.lname)
+                 AND lower(p.fname)=:lower(firstname)
+                 AND lower(p.lname)=:lower(lastname);''',
                  {"firstname":fname, "lastname":lname})
     demeritinfo_life = c.fetchall()
 
     c.execute('''SELECT count(t.tno)
                  FROM tickets t, persons p, registrations r
                  WHERE t.regno = r.regno
-                 AND r.fname=:firstname
-                 AND r.lname=:lastname
-                 AND r.fname = p.fname
-                 AND r.lname = p.lname
+                 AND lower(r.fname)=:lower(firstname)
+                 AND lower(r.lname)=:lower(lastname)
+                 AND lower(r.fname) = lower(p.fname)
+                 AND lower(r.lname) = lower(p.lname)
                  AND t.vdate > date("now", "-2 years");''',
                 {"firstname":fname, "lastname":lname})
 
     ticketnum_2years = c.fetchall()
     c.execute('''SELECT count(*), sum(d.points)
                  FROM demeritNotices d, persons p
-                 WHERE d.fname = p.fname
-                 AND d.lname = p.lname
-                 AND p.fname=:firstname
-                 AND p.lname=:lastname
+                 WHERE lower(d.fname) = lower(p.fname)
+                 AND lower(d.lname) = lower(p.lname)
+                 AND lower(p.fname)=:lower(firstname)
+                 AND lower(p.lname)=:lower(lastname)
                  AND d.ddate > date("now", "-2 years");''',
                  {"firstname":fname, "lastname":lname})
     demeritinfo_2years = c.fetchall()
@@ -156,10 +156,10 @@ def driver_abstract(fname, lname):
                  FROM tickets t, vehicles v, registrations r, persons p
                  WHERE t.regno = r.regno
                  AND r.vin = v.vin
-                 AND p.fname=:firstname
-                 AND p.lname=:lastname
-                 AND r.fname = p.fname
-                 AND r.lname = p.lname
+                 AND lower(p.fname)=:lower(firstname)
+                 AND lower(p.lname)=:lower(lastname)
+                 AND lower(r.fname) = lower(p.fname)
+                 AND lower(r.lname) = lower(p.lname)
                  ORDER BY t.vdate asc;''',
                  {"firstname":fname, "lastname":lname})
     ticketinfo = c.fetchall()
