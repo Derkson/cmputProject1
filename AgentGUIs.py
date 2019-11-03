@@ -357,7 +357,10 @@ class SaleGUI:
         pass
 
     def submitCall(self):
-        # TODO: Vin exists, Seller is owner
+        if not vin_exists(vin=self.VIN.get()):
+            self.VIN.set("VIN not in database")
+            return
+
         if not persons_exists(fname=self.SFN.get(),lname=self.SLN.get()):
             self.SFN.set("Seller not in database")
             self.SLN.set("")
@@ -368,6 +371,13 @@ class SaleGUI:
             self.BLN.set("")
             return
 
+        if not is_current_owner(fname=self.SFN.get(),lname=self.SLN.get(),vin=self.VIN.get()):
+            self.SFN.set("Seller not the owner")
+            self.SLN.set("")
+            return
+
+        bill_of_sale(vin=self.VIN..get(), o_fname=self.SFN.get(), o_lname=self.SLN.get(),
+        new_fname=self.BFN.get(), new_lname=self.BLN.get(), newplate=self.Plate.get())
         self.quit()
         pass
 

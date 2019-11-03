@@ -13,13 +13,6 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 
 def main():
-<<<<<<< HEAD
-    print(get_city_of_user("U007"))
-    #driver_abstract("Chris", "Pontikes", False, False)
-    #driver_abstract("Josh", "Derkson", False, False)
-    #driver_abstract("Alex", "Rostron", True, True)
-=======
->>>>>>> develop
     conn.commit()
     conn.close()
 

@@ -101,3 +101,23 @@ class DriverAbstractGUI:
         self.master = master
         self.username = username
         self.driver = driver
+
+        self.backButton = Button(self.master, text="Back",command=self.quit)
+
+        self.constructGrid()
+        pass
+
+    def constructGrid(self):
+        self.master.title("New Person")
+
+        self.backButton.grid()
+        pass
+
+    def deconstructGrid(self):
+        self.backButton.grid_remove()
+        pass
+
+    def quit(self):
+        self.deconstructGrid()
+        self.master.quit()
+        pass
