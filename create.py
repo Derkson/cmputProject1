@@ -38,10 +38,6 @@ def create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_l
     insertions = (regno, regdate, regplace, p1_fname, p2_lname, p2_fname, p2_lname)
     c.execute('INSERT INTO marriages VALUES(?,?,?,?,?,?,?);', insertions)
 
-def create_registration(regno, regdate, expiry, plate, vin, fname, lname):
-    insertions = (regno, regdate, expiry, plate, vin, fname, lname)
-    c.execute('INSERT INTO registrations VALUES(?,?,?,?,?,?,?);', insertions)
-
 def create_payment(tno, pdate, amount):
     insertions = (tno, pdate, amount)
     c.execute("INSERT INTO payments VALUES(?,?,?)", insertions)

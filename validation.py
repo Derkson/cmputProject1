@@ -30,7 +30,6 @@ def officer(uid):
             return True
     return False
 
-
 #sees if a person is in the database
 def persons_exists(fname, lname):
     c.execute('SELECT fname, lname FROM persons;')
@@ -65,5 +64,5 @@ def is_current_owner(fname, lname, vin):
 
     if(info[0].lower()==fname and info[1].lower()==lname and info[2]==vin):
         return True
-        
+
     return False
