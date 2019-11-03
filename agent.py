@@ -47,28 +47,13 @@ def renew_vehicle(regno):
     #if registration expires today or is expired, new expiry is one year from today
     #else just add one year to the expiry date
     #'case when' in sql
-
-    c.execute('''SELECT *
-                 FROM registrations
-                 WHERE regno=:registrationNumber;''',
-                 {"registrationNumber":regno})
-
-    rows = c.fetchone()
-    expdate = rows[2]
-    year = int(expdate[0:4])
-    month = int(expdate[5:7])
-    day = int(expdate[8:10])
-
-    if(date(year, month, day) > date.today()):
-        newexp = date(year +1, month, day)
-    else:
-        newexp = date.today() + timedelta(days = 365)
-
     c.execute('''UPDATE registrations
-                 SET expiry=:newexpiry
-                 WHERE expiry=:expdate
-                 AND regno=:registrationsNumber;''',
-                 {"newexpiry":newexp, "expdate":expdate, "registrationsNumber":regno})
+                 SET expiry = CASE
+                                 WHEN expiry <= date("now") THEN date("now", "+1 year")
+                                 WHEN expiry > date("now") THEN date(regdate, "+1 year")
+                              END
+                 WHERE regno=:regno;''',
+                 {"regno":regno})
 
 #pretty well works i guess
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
