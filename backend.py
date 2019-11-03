@@ -1,6 +1,5 @@
 import sqlite3
 import random
-from datetime import date, timedelta
 from create import *
 from validation import *
 from agent import *
@@ -13,6 +12,8 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 
 def main():
+    find_car_owner("tank", "panzer iv", "1944", "green", "tank")
+    find_car_owner("tank", "panzer iv", None, "green", "tank")
     conn.commit()
     conn.close()
 

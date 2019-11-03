@@ -1,6 +1,5 @@
 import sqlite3
 import random
-from datetime import date, timedelta
 from create import *
 from validation import *
 global conn, c
@@ -42,7 +41,7 @@ def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     city = get_city_of_user(uid) #regplace is city of users
     create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
 
-#complete, not pretty, can make prettier later
+#complete
 def renew_vehicle(regno):
     #if registration expires today or is expired, new expiry is one year from today
     #else just add one year to the expiry date
@@ -55,7 +54,7 @@ def renew_vehicle(regno):
                  WHERE regno=:regno;''',
                  {"regno":regno})
 
-#pretty well works i guess
+#complete
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
     newregno = make_regno("vehicles")
     vin = vin.lower()
@@ -100,9 +99,9 @@ def process_payment(tno, amount):
 '''
 Order of info in list
 tuple of number of tickets, lifetime
-tuple of number of demerit points and sum of points, lifetime
+tuple of number of demerit notices and sum of points, lifetime
 tuple of number of tickets, past 2 years
-tuple of number of demerit points and sum of points, past 2 years
+tuple of number of demerit notices and sum of points, past 2 years
 tickets with info
     tno, vdate, violation, fine amount, make of car, model of car
 '''

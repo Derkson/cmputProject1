@@ -1,7 +1,5 @@
 import sqlite3
 import random
-from datetime import date
-import validation
 global conn, c
 path = './miniproject1.db'
 conn = sqlite3.connect(path)
