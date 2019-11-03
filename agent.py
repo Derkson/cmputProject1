@@ -1,5 +1,6 @@
 import sqlite3
 import random
+import datetime
 from create import *
 from validation import *
 global conn, c
@@ -9,7 +10,7 @@ c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
 
-#Register a birth, complete
+#Register a birth, complete, can make prettier
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
     #regdate is today's date
     regdate = date.today()
@@ -34,7 +35,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
     create_person(fname, lname, bdate, bplace, address, phone)
     create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname)
 
-#register a marriage, complete
+#register a marriage, complete, can make prettier
 def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     regdate = date.today() #regdate is today
     regno = make_regno("marriages") #unique regno
@@ -49,7 +50,7 @@ def renew_vehicle(regno):
     c.execute('''UPDATE registrations
                  SET expiry = CASE
                                  WHEN expiry <= date("now") THEN date("now", "+1 year")
-                                 WHEN expiry > date("now") THEN date(regdate, "+1 year")
+                                 ELSE date(regdate, "+1 year")
                               END
                  WHERE regno=:regno;''',
                  {"regno":regno})

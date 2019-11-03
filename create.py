@@ -43,7 +43,7 @@ def create_payment(tno, pdate, amount):
 def create_ticket(tno, regno, fine, violation, vdate):
     insertions = (tno, regno, fine, violation, vdate)
     c.execute("INSERT INTO tickets VALUES(?,?,?,?,?)", insertions)
-
+#can use more sql to make case insensitive 
 def get_city_of_user(uid):
     c.execute('''SELECT city, uid FROM users''')
     city = c.fetchall()
