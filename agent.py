@@ -179,6 +179,6 @@ def driver_abstract(fname, lname):
                  {"firstname":fname, "lastname":lname})
     ticketinfo = c.fetchall()
     joinedlist = ticketnum_life + demeritinfo_life + ticketnum_2years + demeritinfo_2years + ticketinfo
-    print(joinedlist)
+
     #view no more than 5 at a time
-    print()
+    return joinedlist
