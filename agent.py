@@ -45,6 +45,7 @@ def renew_vehicle(regno):
     #if registration expires today or is expired, new expiry is one year from today
     #else just add one year to the expiry date
     #'case when' in sql
+
     c.execute('''SELECT *
                  FROM registrations
                  WHERE regno=:registrationNumber;''',
@@ -69,33 +70,18 @@ def renew_vehicle(regno):
 
 #pretty well works i guess
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
-    if(persons_exists(new_fname, new_lname) == False):
-        print("well shit, cant sell to someone that dont exist")
-        return
-    elif(persons_exists(o_fname, o_lname) == False):
-        print("That owner doesnt even exist bro")
-        return
-
-    c.execute('''SELECT fname, lname
-                 FROM registrations
-                 WHERE fname=:o_fname
-                 AND lname=:o_lname
-                 AND vin=:vin;''',
-                 {"vin":vin,"o_fname":o_fname, "o_lname":o_lname})
-    rows = c.fetchone()
-    if(not rows):
-        print("Error in vin")
-        return
-
-    print(rows[0], rows[1])
+    newregno = make_regno("vehicles")
+    vin = vin.lower()
+    o_fname=o_fname.lower()
+    o_lname=o_lname.lower()
     c.execute('''DELETE FROM registrations
-                 WHERE vin=:vin''',
+                 WHERE lower(vin)=:vin''',
                  {"vin":vin})
 
-    newregno = make_regno("vehicles")
-    newregdate = date.today()
-    newexpdate = date.today() + timedelta(days = 365)
-    create_registration(newregno, newregdate, newexpdate, newplate, vin, new_fname, new_lname)
+    c.execute('''UPDATE registrations
+                 SET fname=:new_fname, lname=:new_lname, regno=:newregno, regdate = date("now"), expiry = date("now", "+1 year")
+                 WHERE (lower(fname)=:o_fname AND lower(lname)=:o_lname);''',
+                 {"new_fname":new_fname, "new_lname":new_lname, "newregno":newregno, "o_fname":o_fname, "o_lname":o_lname})
 
 #have a solution here, may need to change it
 def process_payment(tno, amount):
