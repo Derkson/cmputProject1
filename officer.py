@@ -34,21 +34,26 @@ def find_car_owner(make, model, year, color, plate):
     #allow the user to select one
     #during the matches, display
         #make, model, year, color, regdate, expiry, fname, lname of neweset owner
-    make = make.lower()
-    model = model.lower()
-    color = color.lower()
-    plate = plate.lower()
+    if(make is not None):
+        make = make.lower()
+    if(model is not None):
+        model = model.lower()
+    if(color is not None):
+        color = color.lower()
+    if(plate is not None):
+        plate = plate.lower()
+
     c.execute('''SELECT v.make, v.model, v.year, v.color, r.regdate, r.expiry, r.fname, r.lname
                  FROM vehicles v, registrations r
-                 WHERE
-                    CASE
-                        WHEN make NOT NULL THEN v.make=:make
-                        WHEN model NOT NULL THEN v.model=:model
-                        WHEN year NOT NULL THEN v.year=:year
-                        WHEN color NOT NULL THEN v.color=:color
-                        WHEN plate NOT NULL THEN r.plate=:plate
-                    END;
-                 ''',
+                 WHERE r.vin = v.vin
+                 AND
+                 (
+                    CASE WHEN model NOT NULL THEN lower(v.model)=:model
+                    CASE WHEN make NOT NULL THEN lower(v.make)=:make
+                    CASE WHEN year NOT NULL THEN lower(v.year)=:year
+                    CASE WHEN color NOT NULL THEN lower(v.color)=:color 
+                    CASE WHEN plate NOT NULL THEN lower(r.plate)=:plate END)
+                ;''',
                  {"make":make, "model":model, "year":year, "color":color, "plate":plate})
-    info = c.fetchone()
+    info = c.fetchall()
     print(info)
