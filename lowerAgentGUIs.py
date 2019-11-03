@@ -103,8 +103,11 @@ class DriverAbstractGUI:
         self.username = username
         self.driver = driver
         self.info = driver_abstract(self.driver[0],self.driver[1])
-        self.tickets = self.info[4]
-        self.length = self.tickets.len()
+        self.length = self.info[0][0]
+        if self.length == 0:
+            self.tickets = ()
+        else:
+            self.tickets = self.info[4]
         self.offset = 0
 
         self.backButton = Button(self.master, text="Back",command=self.quit)
@@ -112,10 +115,10 @@ class DriverAbstractGUI:
         self.decButton = Button(self.master, text="<<<",command=self.decCall)
         self.incButton = Button(self.master, text=">>>",command=self.incCall)
 
-        self.TicketNumLabel = Label(self.master, text=("Number of Tickets: " + self.info[0][0])
-        self.NoticesNumLabel = Label(self.master, text=("Number of Demerit Notices: " + self.info[1][0])
-        self.DemeritTotalLabel = Label(self.master, text=("Total Demerit Points: " + self.info[1][1])
-        self.DemeritPastLabel = Label(self.master, text=("Points from the Past 2 Years: " + self.info[3][1])
+        self.TicketNumLabel = Label(self.master, text=("Number of Tickets: " + str(self.info[0][0])))
+        self.NoticesNumLabel = Label(self.master, text=("Number of Demerit Notices: " + str(self.info[1][0])))
+        self.DemeritTotalLabel = Label(self.master, text=("Total Demerit Points: " + str(self.info[1][1])))
+        self.DemeritPastLabel = Label(self.master, text=("Points from the Past 2 Years: " + str(self.info[3][1])))
 
         self.labelLabels = (Label(self.master,text="Ticket Num:"),
         Label(self.master,text="Date:"),
@@ -138,10 +141,10 @@ class DriverAbstractGUI:
         self.backButton.grid()
         self.TicketsButton.grid(column=1,row=0)
 
-        self.TicketNumLabel.grid(column=0,columnspan=2,row=0)
-        self.NoticesNumLabel.grid(column=0,columnspan=2,row=1)
-        self.DemeritTotalLabel.grid(column=0,columnspan=2,row=2)
-        self.DemeritPastLabel.grid(column=0,columnspan=2,row=3)
+        self.TicketNumLabel.grid(column=0,columnspan=2,row=1)
+        self.NoticesNumLabel.grid(column=0,columnspan=2,row=2)
+        self.DemeritTotalLabel.grid(column=0,columnspan=2,row=3)
+        self.DemeritPastLabel.grid(column=0,columnspan=2,row=4)
         pass
 
     def deconstructGrid(self):

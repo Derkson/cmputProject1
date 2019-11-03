@@ -376,7 +376,7 @@ class SaleGUI:
             self.SLN.set("")
             return
 
-        bill_of_sale(vin=self.VIN..get(), o_fname=self.SFN.get(), o_lname=self.SLN.get(),
+        bill_of_sale(vin=self.VIN.get(), o_fname=self.SFN.get(), o_lname=self.SLN.get(),
         new_fname=self.BFN.get(), new_lname=self.BLN.get(), newplate=self.Plate.get())
         self.quit()
         pass
