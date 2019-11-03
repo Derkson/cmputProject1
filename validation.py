@@ -1,7 +1,4 @@
 import sqlite3
-import random
-from datetime import date
-import create
 global conn, c
 path = './miniproject1.db'
 conn = sqlite3.connect(path)
@@ -20,7 +17,6 @@ def login(username, password):
             return 1 #valid username, invalid password
     return 2 #invalid username
 
-
 #determines if a person is an officer or not
 def officer(uid):
     c.execute('SELECT uid FROM users WHERE utype = "o";')
@@ -30,7 +26,6 @@ def officer(uid):
             return True
     return False
 
-
 #sees if a person is in the database
 def persons_exists(fname, lname):
     c.execute('SELECT fname, lname FROM persons;')
@@ -39,7 +34,6 @@ def persons_exists(fname, lname):
         if(tuple[0].lower() == fname.lower() and tuple[1].lower() == lname.lower()):
             return True
     return False
-
 
 def regno_exists(regno):
     c.execute('SELECT regno FROM registrations;')
@@ -65,5 +59,5 @@ def is_current_owner(fname, lname, vin):
 
     if(info[0].lower()==fname and info[1].lower()==lname and info[2]==vin):
         return True
-        
+
     return False

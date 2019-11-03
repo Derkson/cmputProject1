@@ -1,6 +1,5 @@
 import sqlite3
 import random
-from datetime import date, timedelta
 from create import *
 from validation import *
 global conn, c
@@ -20,7 +19,6 @@ def issue_ticket(regno, violation, fine, vdate):
                  {"regno":regno})
 
     vehicleinfo = c.fetchone()
-    print(vehicleinfo)
 
     #create unique tno and ticket created
     tno = make_regno("tickets")
@@ -29,6 +27,10 @@ def issue_ticket(regno, violation, fine, vdate):
         vdate = date.today()
 
     create_ticket(tno, regno, fine, violation, vdate)
+    return vehicleinfo
 
 def find_car_owner(make, model, year, color, plate):
-    pass
+    #return all matches based on provided info, not everything needs to be entered
+    #allow the user to select one
+    #during the matches, display
+        #make, model, year, color, regdate, expiry, fname, lname of neweset owner

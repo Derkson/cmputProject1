@@ -1,7 +1,5 @@
 import sqlite3
 import random
-from datetime import date
-import validation
 global conn, c
 path = './miniproject1.db'
 conn = sqlite3.connect(path)
@@ -38,10 +36,6 @@ def create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_l
     insertions = (regno, regdate, regplace, p1_fname, p2_lname, p2_fname, p2_lname)
     c.execute('INSERT INTO marriages VALUES(?,?,?,?,?,?,?);', insertions)
 
-def create_registration(regno, regdate, expiry, plate, vin, fname, lname):
-    insertions = (regno, regdate, expiry, plate, vin, fname, lname)
-    c.execute('INSERT INTO registrations VALUES(?,?,?,?,?,?,?);', insertions)
-
 def create_payment(tno, pdate, amount):
     insertions = (tno, pdate, amount)
     c.execute("INSERT INTO payments VALUES(?,?,?)", insertions)
@@ -49,7 +43,7 @@ def create_payment(tno, pdate, amount):
 def create_ticket(tno, regno, fine, violation, vdate):
     insertions = (tno, regno, fine, violation, vdate)
     c.execute("INSERT INTO tickets VALUES(?,?,?,?,?)", insertions)
-
+#can use more sql to make case insensitive 
 def get_city_of_user(uid):
     c.execute('''SELECT city, uid FROM users''')
     city = c.fetchall()
