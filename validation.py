@@ -44,7 +44,7 @@ def regno_exists(regno):
     return False
 
 def vin_exists(vin):
-    c.execute("SELECT vin, FROM vehicles")
+    c.execute("SELECT lower(vin) FROM vehicles")
     rows = c.fetchall()
     for x in rows:
         if(x[0] == vin):
@@ -52,7 +52,7 @@ def vin_exists(vin):
     return False
 
 def is_current_owner(fname, lname, vin):
-    c.execute('''SELECT fname, lname, vin, regdate
+    c.execute('''SELECT lower(fname), lower(lname), lower(vin), regdate
                  FROM registrations
                  ORDER BY regdate desc;''')
     info = c.fetchone()
