@@ -44,7 +44,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
 
     create_person(fname, lname, bdate, bplace, address, phone)
     create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname)
-
+    return 1
 #makes a regdate
 #makes a unique regno
 #gets a city for regplace
@@ -127,7 +127,7 @@ def process_payment(tno, amount):
                  SET fine=:amountowe
                  WHERE tno=:tno;''',
                  {"amountowe":newAmount, "tno":tno})
-
+    return 2
 '''
 Order of info in list
 tuple of number of tickets, lifetime

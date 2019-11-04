@@ -37,8 +37,7 @@ def create_person(fname, lname, bdate, bplace, address, phone):
     insertions = (fname, lname, bdate, bplace, address, phone)
     c.execute('INSERT INTO persons VALUES(?,?,?,?,?,?);',insertions)
     conn.commit()
-    # TODO: Error when checking to see if the person exists immediatly after making them
-    #Flush?
+
 def create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname):
     insertions = (regno, fname, lname, regdate, regplace, gender, f_fname,f_lname, m_fname, m_lname)
     c.execute('INSERT INTO births VALUES(?,?,?,?,?,?,?,?,?,?);', insertions)
@@ -59,7 +58,7 @@ def create_ticket(tno, regno, fine, violation, vdate):
     c.execute("INSERT INTO tickets VALUES(?,?,?,?,?);", insertions)
     conn.commit()
 
-#takes in the uid and finds the city 
+#takes in the uid and finds the city
 def get_city_of_user(uid):
     c.execute('''SELECT city, uid FROM users;''')
     city = c.fetchall()
