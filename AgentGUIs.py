@@ -1,5 +1,8 @@
 from tkinter import *
 from backend import *
+from validation import *
+from agent import *
+from create import *
 from lowerAgentGUIs import *
 
 class BirthGUI:
