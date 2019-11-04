@@ -47,17 +47,17 @@ def vin_exists(vin):
     c.execute("SELECT lower(vin) FROM vehicles")
     rows = c.fetchall()
     for x in rows:
-        if(x[0] == vin):
+        if(x[0].lower() == vin):
             return True
     return False
 
 def is_current_owner(fname, lname, vin):
-    c.execute('''SELECT lower(fname), lower(lname), lower(vin), regdate
+    c.execute('''SELECT fname, lname, vin, regdate
                  FROM registrations
                  ORDER BY regdate desc;''')
     info = c.fetchone()
 
-    if(info[0].lower()==fname and info[1].lower()==lname and info[2]==vin):
+    if(info[0].lower()==fname.lower() and info[1].lower()==lname.lower() and info[2]==vin.lower()):
         return True
 
     return False
