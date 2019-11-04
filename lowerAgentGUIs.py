@@ -105,7 +105,7 @@ class DriverAbstractGUI:
         self.master = master
         self.username = username
         self.driver = driver
-        self.info = driver_abstract(self.driver[0],self.driver[1])
+        self.info = driver_abstract(fname=self.driver[0],lname=self.driver[1])
         self.length = self.info[0][0]
         if self.length == 0:
             self.tickets = ()

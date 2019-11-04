@@ -13,7 +13,7 @@ c.execute(' PRAGMA foreign_keys=ON ')
 #Register a birth, complete, can make prettier
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
     #regdate is today's date
-    regdate = date.today()
+    regdate = datetime.date.today()
     #regplace is city of user
     city = get_city_of_user(uid)
     #create a unique regno

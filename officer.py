@@ -1,5 +1,6 @@
 import sqlite3
 import random
+import datetime
 from create import *
 from validation import *
 global conn, c
@@ -9,7 +10,7 @@ c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
 def get_regno_info(regno):
-    c.execute('''SELECT r.fname, r.lname, v.make, v.model, v.color
+    c.execute('''SELECT r.fname, r.lname, v.make, v.model, v.color, v.year
                  FROM registrations r, vehicles v
                  WHERE r.vin = v.vin
                  AND r.regno=:regno;''',

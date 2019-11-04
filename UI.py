@@ -112,9 +112,17 @@ class OfficerMenuGUI:
         pass
 
     def ticket(self):
+        self.deconstructGrid()
+        TicketGUI(master=self.master,username=self.username)
+        self.master.mainloop()
+        self.constructGrid()
         pass
 
     def owner(self):
+        self.deconstructGrid()
+        OwnerGUI(master=self.master,username=self.username)
+        self.master.mainloop()
+        self.constructGrid()
         pass
 
     def quit(self):
