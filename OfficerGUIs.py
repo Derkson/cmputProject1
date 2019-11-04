@@ -1,5 +1,6 @@
 from tkinter import *
 from backend import *
+from officer import *
 
 class TicketGUI:
     """docstring for TicketGUI.
@@ -173,7 +174,7 @@ class TicketGUI:
         self.master.quit()
         pass
 
-class OwnerGui:
+class OwnerGUI:
     """docstring for OwnerGui.
     Used for finding a vehicles owner"""
 
@@ -226,7 +227,7 @@ class OwnerGui:
         pass
 
     def submitCall(self):
-        find_car_owner(make=self.Make.get(), model=self.Model.get(), year=self.Year.get(), 
+        self.list = find_car_owner(make=self.Make.get(), model=self.Model.get(), year=self.Year.get(),
         color=self.Color.get(), plate=self.Plate.get())
         pass
 
