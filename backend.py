@@ -12,14 +12,6 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 
 def main():
-    find_car_owner( "", "panzer iv", "1944", "green", "tank") #works
-    find_car_owner("tank", "panzer iv", "", "green", "tank") #works
-    find_car_owner("ford", "", "", "", "") #works
-    find_car_owner("", "f150", "", "", "") #no work
-    find_car_owner("", "", "2015", "", "")
-    find_car_owner("", "", "", "red", "")
-    find_car_owner("", "", "", "", "legoboi")
-    find_car_owner("", "f150", "2015", "red", "legoboi")
     conn.commit()
     conn.close()
 

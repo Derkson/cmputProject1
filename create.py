@@ -50,7 +50,6 @@ def create_payment(tno, pdate, amount):
 
 def create_ticket(tno, regno, fine, violation, vdate):
     insertions = (tno, regno, fine, violation, vdate)
-    print(insertions)
     c.execute("INSERT INTO tickets VALUES(?,?,?,?,?);", insertions)
     conn.commit()
 #can use more sql to make case insensitive

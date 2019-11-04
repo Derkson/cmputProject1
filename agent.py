@@ -25,7 +25,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
     c.execute('''SELECT DISTINCT phone, address
                  FROM persons
                  WHERE lower(fname) =:firstname
-                 AND lower(lname) =: lastname;''',
+                 AND lower(lname) =:lastname;''',
                  {"firstname":m_fname, "lastname":m_lname})
 
     rows = c.fetchall()
@@ -73,7 +73,7 @@ def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
 #have a solution here, may need to change it
 def process_payment(tno, amount):
     #can make multiple payments to pay off ticket, but sum cannot exceed total
-    pdate = date.today()
+    pdate = datetime.date.today()
     create_payment(tno, pdate, amount)
 
     c.execute('''SELECT fine
@@ -114,39 +114,39 @@ def driver_abstract(fname, lname):
     c.execute('''SELECT count(t.tno)
                  FROM tickets t, persons p, registrations r
                  WHERE t.regno = r.regno
-                 AND lower(r.fname)=:lower(firstname)
-                 AND lower(r.lname)=:lower(lastname)
-                 AND lower(r.fname) = lower(p.fname)
-                 AND lower(r.lname) = lower(p.lname);''',
+                 AND r.fname=:firstname
+                 AND r.lname=:lastname
+                 AND r.fname = p.fname
+                 AND r.lname = p.lname;''',
                 {"firstname":fname, "lastname":lname})
 
     ticketnum_life = c.fetchall()
     c.execute('''SELECT count(*), sum(d.points)
                  FROM demeritNotices d, persons p
-                 WHERE lower(d.fname) = lower(p.fname)
-                 AND lower(d.lname) = lower(p.lname)
-                 AND lower(p.fname)=:lower(firstname)
-                 AND lower(p.lname)=:lower(lastname);''',
+                 WHERE d.fname = p.fname
+                 AND d.lname = p.lname
+                 AND p.fname=:firstname
+                 AND p.lname=:lastname;''',
                  {"firstname":fname, "lastname":lname})
     demeritinfo_life = c.fetchall()
 
     c.execute('''SELECT count(t.tno)
                  FROM tickets t, persons p, registrations r
                  WHERE t.regno = r.regno
-                 AND lower(r.fname)=:lower(firstname)
-                 AND lower(r.lname)=:lower(lastname)
-                 AND lower(r.fname) = lower(p.fname)
-                 AND lower(r.lname) = lower(p.lname)
+                 AND r.fname=:firstname
+                 AND r.lname=:lastname
+                 AND r.fname = p.fname
+                 AND r.lname = p.lname
                  AND t.vdate > date("now", "-2 years");''',
                 {"firstname":fname, "lastname":lname})
 
     ticketnum_2years = c.fetchall()
     c.execute('''SELECT count(*), sum(d.points)
                  FROM demeritNotices d, persons p
-                 WHERE lower(d.fname) = lower(p.fname)
-                 AND lower(d.lname) = lower(p.lname)
-                 AND lower(p.fname)=:lower(firstname)
-                 AND lower(p.lname)=:lower(lastname)
+                 WHERE d.fname = p.fname
+                 AND d.lname = p.lname
+                 AND p.fname=:firstname
+                 AND p.lname=:lastname
                  AND d.ddate > date("now", "-2 years");''',
                  {"firstname":fname, "lastname":lname})
     demeritinfo_2years = c.fetchall()
@@ -156,10 +156,10 @@ def driver_abstract(fname, lname):
                  FROM tickets t, vehicles v, registrations r, persons p
                  WHERE t.regno = r.regno
                  AND r.vin = v.vin
-                 AND lower(p.fname)=:lower(firstname)
-                 AND lower(p.lname)=:lower(lastname)
-                 AND lower(r.fname) = lower(p.fname)
-                 AND lower(r.lname) = lower(p.lname)
+                 AND p.fname=:firstname
+                 AND p.lname=:lastname
+                 AND r.fname = p.fname
+                 AND r.lname = p.lname
                  ORDER BY t.vdate asc;''',
                  {"firstname":fname, "lastname":lname})
     ticketinfo = c.fetchall()
