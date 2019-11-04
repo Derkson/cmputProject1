@@ -10,6 +10,7 @@ class TicketGUI:
         self.master = master
         self.username = username
 
+        #initialize the ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.vehicleButton = Button(self.master, text="See Vehicle Info",command=self.vehicleCall)
         self.ticketButton = Button(self.master, text="Enter Ticket?",command=self.ticketCall)
@@ -58,6 +59,7 @@ class TicketGUI:
         pass
 
     def constructGrid(self):
+        # construct the initial ui elements
         self.master.title("Insert Vehicle Registration Number")
 
         self.backButton.grid()
@@ -69,7 +71,7 @@ class TicketGUI:
         pass
 
     def deconstructGrid(self):
-
+        #temporarely destroys all of the ui elements
         self.backButton.grid_remove()
         self.vehicleButton.grid_remove()
         self.ticketButton.grid_remove()
@@ -101,6 +103,7 @@ class TicketGUI:
         pass
 
     def vehicleCall(self):
+        # used to see if the vehicle is in the database and find the data
         try:
             if not regno_exists(int(self.Registration.get())):
                 self.Registration.set("RegNo not in Database")
@@ -109,7 +112,7 @@ class TicketGUI:
             self.Registration.set("Not a number")
             return
 
-        #Here the regno is valid
+        #Here the regno is valid: get the info and construct the new ui elements
         self.Regno = self.Registration.get()
         self.info = get_regno_info(int(self.Regno))
         self.FN = str(self.info[0])
@@ -148,6 +151,7 @@ class TicketGUI:
         pass
 
     def ticketCall(self):
+        # here the user want to give them a ticket: open up the ticket ui elements
         self.ticketButton.grid_remove()
         self.submitButton.grid(column=1,row=0)
 
@@ -160,6 +164,7 @@ class TicketGUI:
         pass
 
     def submitCall(self):
+        # Here the user is submiting a ticket
         try:
             issue_ticket(regno=int(self.Regno), violation=self.Text.get(), fine=int(self.Amount.get()), vdate=self.Date.get())
         except ValueError:
@@ -182,6 +187,7 @@ class OwnerGUI:
         self.master = master
         self.username = username
 
+        # initialize the ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
 
@@ -226,7 +232,26 @@ class OwnerGUI:
         self.ColorEntry.grid(column=1,row=6)
         pass
 
+    def deconstructGrid(self):
+        self.backButton.grid_remove()
+        self.submitButton.grid_remove()
+
+        self.InstructLabel.grid_remove()
+
+        self.PlateLabel.grid_remove()
+        self.PlateEntry.grid_remove()
+        self.MakeLabel.grid_remove()
+        self.MakeEntry.grid_remove()
+        self.ModelLabel.grid_remove()
+        self.ModelEntry.grid_remove()
+        self.YearLabel.grid_remove()
+        self.YearEntry.grid_remove()
+        self.ColorLabel.grid_remove()
+        self.ColorEntry.grid_remove()
+        pass
+
     def submitCall(self):
+        # TODO: complete the list
         self.list = find_car_owner(make=self.Make.get(), model=self.Model.get(), year=self.Year.get(),
         color=self.Color.get(), plate=self.Plate.get())
         pass

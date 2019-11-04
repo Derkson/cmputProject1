@@ -10,6 +10,7 @@ class NewPersonGUI:
         self.master = master
         self.title = title
 
+        #initialize the ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
 
@@ -84,6 +85,7 @@ class NewPersonGUI:
         pass
 
     def submitCall(self):
+        #Submit the person
         create_person(fname=self.title[1], lname=self.title[2], bdate=self.BD.get(),
         bplace=self.BP.get(), address=self.address.get(), phone=self.phone.get())
         if not persons_exists(fname=self.title[1], lname=self.title[2]):
@@ -99,9 +101,11 @@ class NewPersonGUI:
 
 
 class DriverAbstractGUI:
-    """docstring forDriverAbstractGUI."""
+    """docstring forDriverAbstractGUI.
+    Used to display the driver abstract"""
 
     def __init__(self, master, username, driver):
+        #initialize the information
         self.master = master
         self.username = username
         self.driver = driver
@@ -113,6 +117,7 @@ class DriverAbstractGUI:
             self.tickets = self.info[4]
         self.offset = 0
 
+        #initialize ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.TicketsButton = Button(self.master, text="View Tickets",command=self.viewTickets)
         self.decButton = Button(self.master, text="<<<",command=self.decCall)
@@ -139,6 +144,7 @@ class DriverAbstractGUI:
         pass
 
     def constructGrid(self):
+        #construct the ui
         self.master.title("Driver: " + self.driver[0] + " " + self.driver[1])
 
         self.backButton.grid()
@@ -151,6 +157,7 @@ class DriverAbstractGUI:
         pass
 
     def deconstructGrid(self):
+        #deconstruct the ui
         self.backButton.grid_remove()
         self.TicketsButton.grid_remove()
 
@@ -164,6 +171,7 @@ class DriverAbstractGUI:
         pass
 
     def viewTickets(self):
+        #used to show the drivers tickets
         self.TicketsButton.grid_remove()
         if self.length > 5:
             self.incButton.grid(column=4,row=0)
@@ -172,6 +180,7 @@ class DriverAbstractGUI:
         pass
 
     def removeTickets(self):
+        # removes all the tickets
         for i in self.ticketLabels:
             i.grid_remove()
         for i in range(6):
@@ -179,6 +188,7 @@ class DriverAbstractGUI:
         pass
 
     def refreshTickets(self):
+        #used to reestablish the ticket labels
         self.removeTickets()
 
         for i in range(min(5,self.length-self.offset)):
@@ -188,6 +198,7 @@ class DriverAbstractGUI:
         pass
 
     def incCall(self):
+        # called with the incButton to move to the next set of tickets
         self.offset += 5
         if 5 >= self.length - self.offset:
             self.incButton.grid_remove()
@@ -196,6 +207,7 @@ class DriverAbstractGUI:
         pass
 
     def decCall(self):
+        # called with the decbutton to move back to the last set of tickets
         self.offset -= 5
         if 5 > self.offset:
             self.decButton.grid_remove()
