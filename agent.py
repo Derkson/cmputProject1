@@ -12,6 +12,9 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 #Register a birth, complete, can make prettier
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
+
+    if bdate > datetime.date.today(): #cant be born in the future
+        return 0
     #regdate is today's date
     regdate = datetime.date.today()
     #regplace is city of user
@@ -56,7 +59,7 @@ def renew_vehicle(regno):
                  {"regno":regno})
     conn.commit()
 
-#NO LONGER SHITS ITSELF 
+#NO LONGER SHITS ITSELF
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
     #old registration has expiry of today
     #create a new registration
@@ -91,6 +94,8 @@ def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
 def process_payment(tno, amount):
     #can make multiple payments to pay off ticket, but sum cannot exceed total
     pdate = datetime.date.today()
+    if amount < 0:
+        return #cant have a negative poyment 
     create_payment(tno, pdate, amount)
 
     c.execute('''SELECT fine
