@@ -9,10 +9,7 @@ conn = sqlite3.connect(path)
 c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
-
-def issue_ticket(regno, violation, fine, vdate):
-    #provide regno and get the name, make, model, year and color
-    #provide vdate, violation, fine
+def get_regno_info(regno):
     c.execute('''SELECT r.fname, r.lname, v.make, v.model, v.color
                  FROM registrations r, vehicles v
                  WHERE r.vin = v.vin
@@ -20,7 +17,11 @@ def issue_ticket(regno, violation, fine, vdate):
                  {"regno":regno})
 
     vehicleinfo = c.fetchone()
+    return vehicleinfo
 
+def issue_ticket(regno, violation, fine, vdate):
+    #provide regno and get the name, make, model, year and color
+    #provide vdate, violation, fine
     #create unique tno and ticket created
     tno = make_regno("tickets")
     #if no date is provided, vdate is today
@@ -28,7 +29,6 @@ def issue_ticket(regno, violation, fine, vdate):
         vdate = date.today()
 
     create_ticket(tno, regno, fine, violation, vdate)
-    return vehicleinfo
 
 def find_car_owner(make, model, year, color, plate):
     #return all matches based on provided info, not everything needs to be entered
