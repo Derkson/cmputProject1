@@ -62,15 +62,17 @@ def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
     o_fname = o_fname.lower()
     o_lname = o_lname.lower()
 
-    c.execute('''UPDATE registrations
-                 SET fname=:new_fname, lname=:new_lname, regno=:newregno, regdate = date("now"), expiry = date("now", "+1 year")
+    c.execute('''DELETE FROM registrations
                  WHERE lower(fname)=:o_fname
                  AND lower(lname)=:o_lname
                  AND lower(vin)=:vin;''',
-                 {"new_fname":new_fname, "new_lname":new_lname, "newregno":newregno, "o_fname":o_fname, "o_lname":o_lname,"vin":vin})
-
-
+                 {"o_lname":o_lname, "o_fname":o_fname, "vin":vin})
     conn.commit()
+
+    insertions = (newregno, newplate, vin, new_fname, new_lname)
+    c.execute('''INSERT INTO registrations VALUES(?,date("now"), date("now", "+1 year"), ?,?,?,?);''', insertions)
+    conn.commit()
+
 
 #have a solution here, may need to change it
 def process_payment(tno, amount):
