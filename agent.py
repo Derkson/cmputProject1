@@ -91,12 +91,13 @@ def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
         return
     conn.commit()
 
-#have a solution here, may need to change it
+#returns 1 if the input amount is negative
+#returns 0 if you overpay 
 def process_payment(tno, amount):
     #can make multiple payments to pay off ticket, but sum cannot exceed total
     pdate = datetime.date.today()
     if amount < 0:
-        return #cant have a negative poyment 
+        return 0#cant have a negative poyment
     create_payment(tno, pdate, amount)
 
     c.execute('''SELECT fine
@@ -109,11 +110,7 @@ def process_payment(tno, amount):
 
     newAmount = int(row[0]) - amount
     if(newAmount < 0):
-        print("paid too much money")
-        return
-    elif(newAmount == 0):
-        print("all paid up")
-    print("new amount owing: ", newAmount)
+        return 1
 
     c.execute('''UPDATE tickets
                  SET fine=:amountowe
