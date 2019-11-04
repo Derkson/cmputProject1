@@ -56,21 +56,33 @@ def renew_vehicle(regno):
                  {"regno":regno})
     conn.commit()
 
-#NOT COMPLETE, FOREIGN KEY CONSTRAINT FAILURE
+#NO LONGER SHITS ITSELF 
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
+    #old registration has expiry of today
+    #create a new registration
     newregno = make_regno("vehicles")
     vin = vin.lower()
     o_fname = o_fname.lower()
     o_lname = o_lname.lower()
+    new_fname = new_fname.lower()
+    new_lname = new_lname.lower()
 
-    if(persons_exists(o_fname, o_lname) and persons_exists(new_fname, new_lname) and vin_exists(vin)):
+    c.execute('''SELECT regno
+                 FROM registrations
+                 WHERE lower(vin)=:vin
+                 AND lower(fname)=:o_fname
+                 AND lower(lname)=:o_fname;''',
+                 {"vin":vin, "o_fname":o_fname, "o_lname":o_lname})
+    regno = c.fetchall()
+
+    if(regno_exists(regno)):
         c.execute('''UPDATE registrations
-                       SET regno=:newregno, fname=:new_fname, lname=:new_lname, plate=:newplate, regdate=date("now"), expiry=date("now", "+1 year")
-                       WHERE lower(vin)=:vin AND lower(fname)=:o_fname AND lower(lname)=:o_lname;''',
-                       {"vin":vin, "o_lname":o_lname, "o_fname":o_fname, "newregno":newregno, "new_fname":new_fname, "new_lname":new_lname, "newplate":newplate})
+                     SET expiry = date("now")
+                     WHERE regno=:regno;''',
+                     {"regno":regno})
 
-        conn.commit()
-
+        insertions = (newregno, newplate, vin, new_fname, new_lname)
+        c.execute('''INSERT INTO registrations VALUES(?,date("now"),date("now", "+1 year"),?,?,?,?)''', insertions)
     else:
         return
     conn.commit()
@@ -159,7 +171,7 @@ def driver_abstract(fname, lname):
     demeritinfo_2years = c.fetchall()
 
     #given ticket info, can order asc or desc by date
-    c.execute('''SELECT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
+    c.execute('''SELECT DISTINCT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
                  FROM tickets t, vehicles v, registrations r, persons p
                  WHERE t.regno = r.regno
                  AND lower(r.vin) = lower(v.vin)
