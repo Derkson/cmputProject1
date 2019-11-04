@@ -226,6 +226,8 @@ class OwnerGui:
         pass
 
     def submitCall(self):
+        find_car_owner(make=self.Make.get(), model=self.Model.get(), year=self.Year.get(), 
+        color=self.Color.get(), plate=self.Plate.get())
         pass
 
     def quit(self):
