@@ -46,7 +46,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
 #makes a unique regno
 #gets a city for regplace
 #uploads into table
-#case sensitive 
+#case sensitive based on database 
 def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     regdate = datetime.date.today() #regdate is today
     regno = make_regno("marriages") #unique regno
