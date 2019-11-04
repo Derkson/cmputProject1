@@ -54,6 +54,7 @@ def renew_vehicle(regno):
                               END
                  WHERE regno=:regno;''',
                  {"regno":regno})
+    conn.commit()
 
 #NOT COMPLETE, FOREIGN KEY CONSTRAINT FAILURE
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
@@ -62,17 +63,17 @@ def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
     o_fname = o_fname.lower()
     o_lname = o_lname.lower()
 
-    c.execute('''DELETE FROM registrations
-                 WHERE lower(fname)=:o_fname
-                 AND lower(lname)=:o_lname
-                 AND lower(vin)=:vin;''',
-                 {"o_lname":o_lname, "o_fname":o_fname, "vin":vin})
-    conn.commit()
+    if(persons_exists(o_fname, o_lname) and persons_exists(new_fname, new_lname) and vin_exists(vin)):
+        c.execute('''UPDATE registrations
+                       SET regno=:newregno, fname=:new_fname, lname=:new_lname, plate=:newplate, regdate=date("now"), expiry=date("now", "+1 year")
+                       WHERE lower(vin)=:vin AND lower(fname)=:o_fname AND lower(lname)=:o_lname;''',
+                       {"vin":vin, "o_lname":o_lname, "o_fname":o_fname, "newregno":newregno, "new_fname":new_fname, "new_lname":new_lname, "newplate":newplate})
 
-    insertions = (newregno, newplate, vin, new_fname, new_lname)
-    c.execute('''INSERT INTO registrations VALUES(?,date("now"), date("now", "+1 year"), ?,?,?,?);''', insertions)
-    conn.commit()
+        conn.commit()
 
+    else:
+        return
+    conn.commit()
 
 #have a solution here, may need to change it
 def process_payment(tno, amount):
@@ -115,42 +116,44 @@ def driver_abstract(fname, lname):
     #all within two years or lifetime
 
     #ticket number lifetime
+    fname = fname.lower()
+    lname = lname.lower()
     c.execute('''SELECT count(t.tno)
                  FROM tickets t, persons p, registrations r
                  WHERE t.regno = r.regno
-                 AND r.fname=:firstname
-                 AND r.lname=:lastname
-                 AND r.fname = p.fname
-                 AND r.lname = p.lname;''',
+                 AND lower(r.fname)=:firstname
+                 AND lower(r.lname)=:lastname
+                 AND lower(r.fname) = lower(p.fname)
+                 AND lower(r.lname) = lower(p.lname);''',
                 {"firstname":fname, "lastname":lname})
 
     ticketnum_life = c.fetchall()
     c.execute('''SELECT count(*), sum(d.points)
                  FROM demeritNotices d, persons p
-                 WHERE d.fname = p.fname
-                 AND d.lname = p.lname
-                 AND p.fname=:firstname
-                 AND p.lname=:lastname;''',
+                 WHERE lower(d.fname) = lower(p.fname)
+                 AND lower(d.lname) = lower(p.lname)
+                 AND lower(p.fname)=:firstname
+                 AND lower(p.lname)=:lastname;''',
                  {"firstname":fname, "lastname":lname})
     demeritinfo_life = c.fetchall()
 
     c.execute('''SELECT count(t.tno)
                  FROM tickets t, persons p, registrations r
                  WHERE t.regno = r.regno
-                 AND r.fname=:firstname
-                 AND r.lname=:lastname
-                 AND r.fname = p.fname
-                 AND r.lname = p.lname
+                 AND lower(r.fname)=:firstname
+                 AND lower(r.lname)=:lastname
+                 AND lower(r.fname) = lower(p.fname)
+                 AND lower(r.lname) = lower(p.lname)
                  AND t.vdate > date("now", "-2 years");''',
                 {"firstname":fname, "lastname":lname})
 
     ticketnum_2years = c.fetchall()
     c.execute('''SELECT count(*), sum(d.points)
                  FROM demeritNotices d, persons p
-                 WHERE d.fname = p.fname
-                 AND d.lname = p.lname
-                 AND p.fname=:firstname
-                 AND p.lname=:lastname
+                 WHERE lower(d.fname) = lower(p.fname)
+                 AND lower(d.lname) = lower(p.lname)
+                 AND lower(p.fname)=:firstname
+                 AND lower(p.lname)=:lastname
                  AND d.ddate > date("now", "-2 years");''',
                  {"firstname":fname, "lastname":lname})
     demeritinfo_2years = c.fetchall()
@@ -159,11 +162,11 @@ def driver_abstract(fname, lname):
     c.execute('''SELECT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
                  FROM tickets t, vehicles v, registrations r, persons p
                  WHERE t.regno = r.regno
-                 AND r.vin = v.vin
-                 AND p.fname=:firstname
-                 AND p.lname=:lastname
-                 AND r.fname = p.fname
-                 AND r.lname = p.lname
+                 AND lower(r.vin) = lower(v.vin)
+                 AND lower(p.fname)=:firstname
+                 AND lower(p.lname)=:lastname
+                 AND lower(r.fname) = lower(p.fname)
+                 AND lower(r.lname) = lower(p.lname)
                  ORDER BY t.vdate asc;''',
                  {"firstname":fname, "lastname":lname})
     ticketinfo = c.fetchall()
