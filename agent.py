@@ -25,7 +25,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
     c.execute('''SELECT DISTINCT phone, address
                  FROM persons
                  WHERE lower(fname) =:firstname
-                 AND lower(lname) =: lastname;''',
+                 AND lower(lname) =:lastname;''',
                  {"firstname":m_fname, "lastname":m_lname})
 
     rows = c.fetchall()
