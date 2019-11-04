@@ -12,14 +12,14 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 
 def main():
-    find_car_owner(None, "panzer iv", "1944", "green", "tank") #works
-    find_car_owner("tank", "panzer iv", None, "green", "tank") #works
-    find_car_owner("ford", None, None, None, None) #works
-    find_car_owner(None, "f150", None, None, None) #no work
-    find_car_owner(None, None, "2015", None, None)
-    find_car_owner(None, None, None, "red", None)
-    find_car_owner(None, None, None, None, "legoboi")
-    find_car_owner(None, "f150", "2015", "red", "legoboi")
+    find_car_owner( "", "panzer iv", "1944", "green", "tank") #works
+    find_car_owner("tank", "panzer iv", "", "green", "tank") #works
+    find_car_owner("ford", "", "", "", "") #works
+    find_car_owner("", "f150", "", "", "") #no work
+    find_car_owner("", "", "2015", "", "")
+    find_car_owner("", "", "", "red", "")
+    find_car_owner("", "", "", "", "legoboi")
+    find_car_owner("", "f150", "2015", "red", "legoboi")
     conn.commit()
     conn.close()
 
