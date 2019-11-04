@@ -48,4 +48,6 @@ def find_car_owner(make, model, year, color, plate):
                  AND v.vin = r.vin;''',
                  {"make":"%"+make.lower()+"%", "model":"%"+model.lower()+"%", "year":"%"+year.lower()+"%", "color":"%"+color.lower()+"%", "plate":"%"+plate.lower()+"%"})
     rows = c.fetchall()
+    for x in rows:
+        print x 
     return rows
