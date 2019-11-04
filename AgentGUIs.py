@@ -473,11 +473,11 @@ class PaymentGUI:
 
     def submitCall(self):
         try: # to process the payment
-            self.return = process_payment(tno=int(self.Ticket.get()),amount=int(self.Amount.get()))
-            if self.return == 1: # When the amount is over the current
+            self.info = process_payment(tno=int(self.Ticket.get()),amount=int(self.Amount.get()))
+            if self.info == 1: # When the amount is over the current
                 self.Amount.set("Paying too much")
                 return
-            if self.return == 0: #When the amount is negative
+            if self.info == 0: #When the amount is negative
                 self.Amount.set("No negatives")
                 return
 

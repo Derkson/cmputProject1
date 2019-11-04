@@ -19,9 +19,6 @@ c.execute(' PRAGMA foreign_keys=ON ')
 #adds a person to the tables
 #adds a birth to the tables
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
-
-    if bdate > datetime.date.today(): #cant be born in the future
-        return 0
     #regdate is today's date
     regdate = datetime.date.today()
     #regplace is city of user
@@ -52,7 +49,7 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
 def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     regdate = datetime.date.today() #regdate is today
     regno = make_regno("marriages") #unique regno
-    city = get_city_of_user(uid) #regplace is city of users
+    regplace = get_city_of_user(uid) #regplace is city of users
     create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
 
 #complete

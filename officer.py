@@ -12,7 +12,7 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 #takes in the regno and provides the registration information
 def get_regno_info(regno):
-    c.execute('''SELECT r.fname, r.lname, v.make, v.model, v.color
+    c.execute('''SELECT r.fname, r.lname, v.make, v.model, v.color, v.year
                  FROM registrations r, vehicles v
                  WHERE r.vin = v.vin
                  AND r.regno=:regno;''',

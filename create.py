@@ -1,6 +1,5 @@
 import sqlite3
 import random
-import UI
 import sys
 global conn, c
 path = sys.argv[1]
@@ -44,7 +43,7 @@ def create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lnam
     conn.commit()
 
 def create_marriage(regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname):
-    insertions = (regno, regdate, regplace, p1_fname, p2_lname, p2_fname, p2_lname)
+    insertions = (regno, regdate, regplace, p1_fname, p1_lname, p2_fname, p2_lname)
     c.execute('INSERT INTO marriages VALUES(?,?,?,?,?,?,?);', insertions)
     conn.commit()
 
