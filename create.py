@@ -8,8 +8,10 @@ conn = sqlite3.connect(path)
 c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
+#creates a unique regno dependent on what table you need it for
 def make_regno(table):
     regno = random.randint(1,1000)
+    #which table do you need the table for, gets all regno from that table
     if(table ==  "births"):
         c.execute('SELECT regno FROM births;')
     elif(table == "marriages"):
@@ -22,18 +24,19 @@ def make_regno(table):
         return -1
 
     rows = c.fetchall()
+    #compares them all to see if it's unique, if not, recursively call the function
     for (x,) in rows:
         if(x == regno):
             return make_regno(table)
     conn.commit()
     return regno
 
+
+#all functions with 'create' simply take an imput and insert the values into the table
 def create_person(fname, lname, bdate, bplace, address, phone):
     insertions = (fname, lname, bdate, bplace, address, phone)
     c.execute('INSERT INTO persons VALUES(?,?,?,?,?,?);',insertions)
     conn.commit()
-    # TODO: Error when checking to see if the person exists immediatly after making them
-    #Flush?
 
 def create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname):
     insertions = (regno, fname, lname, regdate, regplace, gender, f_fname,f_lname, m_fname, m_lname)
@@ -54,10 +57,9 @@ def create_ticket(tno, regno, fine, violation, vdate):
     insertions = (tno, regno, fine, violation, vdate)
     c.execute("INSERT INTO tickets VALUES(?,?,?,?,?);", insertions)
     conn.commit()
-#can use more sql to make case insensitive
+
+#takes in the uid and finds the city
 def get_city_of_user(uid):
-    # TODO: when marrying two people, print(city) gives [(u'Edmonton', u'U100'), (u'Edmonton', u'U007'), (u'Edmonton', u'U420'), (u'Edmonton', u'U069'), (u'Edmonton', u'U404')]
-    # methinks this if leftover from the make_regno, dump?
     c.execute('''SELECT city, uid FROM users;''')
     city = c.fetchall()
     for x in city:

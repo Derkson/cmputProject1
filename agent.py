@@ -11,7 +11,13 @@ c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
 
-#Register a birth, complete, can make prettier
+#gets todays date
+#checks if birthdate is valid
+#gets a city for regplace
+#creates a unique regno
+#gets an address and phone number from mother
+#adds a person to the tables
+#adds a birth to the tables
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
 
     if bdate > datetime.date.today(): #cant be born in the future
@@ -38,8 +44,11 @@ def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fnam
 
     create_person(fname, lname, bdate, bplace, address, phone)
     create_birth(regno, fname, lname, regdate, regplace, gender, f_fname, f_lname, m_fname, m_lname)
-
-#register a marriage, complete, can make prettier
+    return 1
+#makes a regdate
+#makes a unique regno
+#gets a city for regplace
+#uploads into table
 def register_marriage(p1_fname, p1_lname, p2_fname, p2_lname, uid):
     regdate = datetime.date.today() #regdate is today
     regno = make_regno("marriages") #unique regno
@@ -60,7 +69,9 @@ def renew_vehicle(regno):
                  {"regno":regno})
     conn.commit()
 
-#NO LONGER SHITS ITSELF
+#finds regno
+#if it is a valid regno, then set the expiry date on old registration
+#create a new registration wit new owner etc.
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
     #old registration has expiry of today
     #create a new registration
@@ -92,7 +103,7 @@ def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
     conn.commit()
 
 #returns 1 if the input amount is negative
-#returns 0 if you overpay 
+#returns 0 if you overpay
 def process_payment(tno, amount):
     #can make multiple payments to pay off ticket, but sum cannot exceed total
     pdate = datetime.date.today()
@@ -116,7 +127,7 @@ def process_payment(tno, amount):
                  SET fine=:amountowe
                  WHERE tno=:tno;''',
                  {"amountowe":newAmount, "tno":tno})
-
+    return 2
 '''
 Order of info in list
 tuple of number of tickets, lifetime

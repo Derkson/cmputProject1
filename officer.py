@@ -10,7 +10,7 @@ conn = sqlite3.connect(path)
 c = conn.cursor()
 c.execute(' PRAGMA foreign_keys=ON ')
 
-#complete
+#takes in the regno and provides the registration information
 def get_regno_info(regno):
     c.execute('''SELECT r.fname, r.lname, v.make, v.model, v.color
                  FROM registrations r, vehicles v
@@ -21,19 +21,17 @@ def get_regno_info(regno):
     vehicleinfo = c.fetchone()
     return vehicleinfo
 
-#complete
+#checks to see if there is a date, if not make today the date
+#inserts a ticket into the tables
 def issue_ticket(regno, violation, fine, vdate):
-    #provide regno and get the name, make, model, year and color
-    #provide vdate, violation, fine
-    #create unique tno and ticket created
     tno = make_regno("tickets")
     #if no date is provided, vdate is today
     if(not vdate):
-        vdate = date.today()
+        vdate = datetime.date.today()
 
     create_ticket(tno, regno, fine, violation, vdate)
 
-#complete
+
 def find_car_owner(make, model, year, color, plate):
     #return all matches based on provided info, not everything needs to be entered
     #allow the user to select one
