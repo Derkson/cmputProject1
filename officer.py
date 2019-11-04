@@ -39,15 +39,14 @@ def find_car_owner(make, model, year, color, plate):
     #during the matches, display
         #make, model, year, color, regdate, expiry, fname, lname of neweset owner
 
-    q = '''SELECT v.make, v.model, v.color, r.regdate, r.expiry, r.fname, r.lname
+    c.execute('''SELECT v.make, v.model, v.color, r.regdate, r.expiry, r.fname, r.lname
                  FROM registrations r, vehicles v
-                 WHERE lower(v.make) LIKE '%{make}%'
-                 AND lower(v.model) LIKE '%{model}%'
-                 AND v.year LIKE '%{year}%'
-                 AND lower(v.color) LIKE '%{color}%'
-                 AND lower(r.plate) LIKE '%{plate}%';'''
-
-    print(q.format(make = make.lower(), model = model.lower(), year = year, color = color.lower(), plate = plate.lower()))
-    c.execute(q.format(make = make.lower(), model = model.lower(), year = year, color = color.lower(), plate = plate.lower()))
+                 WHERE lower(v.make) LIKE :make
+                 AND lower(v.model) LIKE :model
+                 AND v.year LIKE :year
+                 AND lower(v.color) LIKE :color
+                 AND lower(r.plate) LIKE :plate
+                 AND v.vin = r.vin;''',
+                 {"make":"%"+make.lower()+"%", "model":"%"+model.lower()+"%", "year":"%"+year.lower()+"%", "color":"%"+color.lower()+"%", "plate":"%"+plate.lower()+"%"})
     rows = c.fetchall()
-    print(rows)
+    return rows
