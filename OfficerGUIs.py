@@ -180,3 +180,55 @@ class OwnerGui:
     def __init__(self, master, username):
         self.master = master
         self.username = username
+
+        self.backButton = Button(self.master, text="Back",command=self.quit)
+        self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
+
+        self.InstructLabel = Label(self.master, text="Insert One or More:")
+
+        self.Plate = StringVar()
+        self.PlateLabel = Label(self.master, text="Vehicle Plate:")
+        self.PlateEntry = Entry(self.master, textvariable=self.Plate)
+        self.Make = StringVar()
+        self.MakeLabel = Label(self.master, text="Vehicle Make:")
+        self.MakeEntry = Entry(self.master, textvariable=self.Make)
+        self.Model = StringVar()
+        self.ModelLabel = Label(self.master, text="Vehicle Model:")
+        self.ModelEntry = Entry(self.master, textvariable=self.Model)
+        self.Year = StringVar()
+        self.YearLabel = Label(self.master, text="Vehicle Year:")
+        self.YearEntry = Entry(self.master, textvariable=self.Year)
+        self.Color = StringVar()
+        self.ColorLabel = Label(self.master, text="Vehicle Color:")
+        self.ColorEntry = Entry(self.master, textvariable=self.Color)
+
+        self.constructGrid()
+        pass
+
+    def constructGrid(self):
+        self.master.title("Find Vehicle Owner")
+
+        self.backButton.grid(column=0,row=0)
+        self.submitButton.grid(column=1,row=0)
+
+        self.InstructLabel.grid(column=0,row=1,columnspan=2)
+
+        self.PlateLabel.grid(column=0,row=2)
+        self.PlateEntry.grid(column=1,row=2)
+        self.MakeLabel.grid(column=0,row=3)
+        self.MakeEntry.grid(column=1,row=3)
+        self.ModelLabel.grid(column=0,row=4)
+        self.ModelEntry.grid(column=1,row=4)
+        self.YearLabel.grid(column=0,row=5)
+        self.YearEntry.grid(column=1,row=5)
+        self.ColorLabel.grid(column=0,row=6)
+        self.ColorEntry.grid(column=1,row=6)
+        pass
+
+    def submitCall(self):
+        pass
+
+    def quit(self):
+        self.deconstructGrid()
+        self.master.quit()
+        pass

@@ -1,10 +1,19 @@
 from tkinter import *
 from backend import *
+import sys
+import os
 
 from AgentGUIs import *
 from OfficerGUIs import *
 
 def main():
+    if (not 1 == len(sys.argv[1:])):
+        print("Too few or too many arguments")
+        return
+    if not os.path.exists(sys.argv[1]):
+        print("Argument doesn't exist")
+        return
+    # include: path = sys.argv[1] : in imported sql files
     root = Tk()
     LoginGUI(root)
     root.mainloop()
