@@ -10,6 +10,7 @@ class BirthGUI:
         self.master = master
         self.username = username
 
+        #initialize the ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
 
@@ -115,9 +116,12 @@ class BirthGUI:
         if not persons_exists(fname=self.father[0],lname=self.father[1]):
             self.launchNewPerson(title=("Father",self.father[0],self.father[1]))
 
-        register_birth(fname=self.CFN.get(), lname=self.CLN.get(), gender=self.gender.get(),
+        if (0 == register_birth(fname=self.CFN.get(), lname=self.CLN.get(), gender=self.gender.get(),
         bdate=self.BD.get(), bplace=self.BP.get(), f_fname=self.FFN.get(), f_lname=self.FLN.get(),
-        m_fname=self.MFN.get(), m_lname=self.MLN.get(), uid=self.username)
+        m_fname=self.MFN.get(), m_lname=self.MLN.get(), uid=self.username)):
+            self.BD.set("Date in the future")
+            return
+
         self.quit()
         pass
 
