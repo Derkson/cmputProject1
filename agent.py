@@ -55,20 +55,22 @@ def renew_vehicle(regno):
                  WHERE regno=:regno;''',
                  {"regno":regno})
 
-#complete
+#NOT COMPLETE, FOREIGN KEY CONSTRAINT FAILURE
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
     newregno = make_regno("vehicles")
     vin = vin.lower()
-    o_fname=o_fname.lower()
-    o_lname=o_lname.lower()
-    c.execute('''DELETE FROM registrations
-                 WHERE lower(vin)=:vin''',
-                 {"vin":vin})
+    o_fname = o_fname.lower()
+    o_lname = o_lname.lower()
 
     c.execute('''UPDATE registrations
                  SET fname=:new_fname, lname=:new_lname, regno=:newregno, regdate = date("now"), expiry = date("now", "+1 year")
-                 WHERE (lower(fname)=:o_fname AND lower(lname)=:o_lname);''',
-                 {"new_fname":new_fname, "new_lname":new_lname, "newregno":newregno, "o_fname":o_fname, "o_lname":o_lname})
+                 WHERE lower(fname)=:o_fname
+                 AND lower(lname)=:o_lname
+                 AND lower(vin)=:vin;''',
+                 {"new_fname":new_fname, "new_lname":new_lname, "newregno":newregno, "o_fname":o_fname, "o_lname":o_lname,"vin":vin})
+
+
+    conn.commit()
 
 #have a solution here, may need to change it
 def process_payment(tno, amount):

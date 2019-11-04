@@ -12,6 +12,7 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 
 def main():
+    bill_of_sale("u003", "josh", "derkson", "chris", "pontikes", "mine")
     conn.commit()
     conn.close()
 
