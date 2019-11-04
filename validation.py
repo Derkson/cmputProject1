@@ -53,12 +53,21 @@ def vin_exists(vin):
     return False
 
 def is_current_owner(fname, lname, vin):
+    fname = fname.lower()
+    lname = lname.lower()
+    vin = vin.lower()
     c.execute('''SELECT fname, lname, vin, regdate
                  FROM registrations
-                 ORDER BY regdate desc;''')
+                 WHERE lower(fname)=:fname
+                 AND lower(lname)=:lname
+                 AND lower(vin)=:vin
+                 ORDER BY regdate desc;''',
+                 {"fname":fname, "lname":lname, "vin":vin})
     info = c.fetchone()
+    print(info)
 
-    if(info[0].lower()==fname.lower() and info[1].lower()==lname.lower() and info[2]==vin.lower()):
+    if(not info):
+        return False
+    if(info[0].lower() == fname and info[1].lower() == lname and info[2].lower() == vin):
         return True
-
     return False

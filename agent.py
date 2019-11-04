@@ -13,6 +13,9 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 #Register a birth, complete, can make prettier
 def register_birth(fname, lname, gender, bdate, bplace, f_fname, f_lname, m_fname, m_lname, uid):
+
+    if bdate > datetime.date.today(): #cant be born in the future
+        return 0
     #regdate is today's date
     regdate = datetime.date.today()
     #regplace is city of user
@@ -55,26 +58,45 @@ def renew_vehicle(regno):
                               END
                  WHERE regno=:regno;''',
                  {"regno":regno})
+    conn.commit()
 
-#complete
+#NO LONGER SHITS ITSELF
 def bill_of_sale(vin, o_fname, o_lname, new_fname, new_lname, newplate):
+    #old registration has expiry of today
+    #create a new registration
     newregno = make_regno("vehicles")
     vin = vin.lower()
-    o_fname=o_fname.lower()
-    o_lname=o_lname.lower()
-    c.execute('''DELETE FROM registrations
-                 WHERE lower(vin)=:vin''',
-                 {"vin":vin})
+    o_fname = o_fname.lower()
+    o_lname = o_lname.lower()
+    new_fname = new_fname.lower()
+    new_lname = new_lname.lower()
 
-    c.execute('''UPDATE registrations
-                 SET fname=:new_fname, lname=:new_lname, regno=:newregno, regdate = date("now"), expiry = date("now", "+1 year")
-                 WHERE (lower(fname)=:o_fname AND lower(lname)=:o_lname);''',
-                 {"new_fname":new_fname, "new_lname":new_lname, "newregno":newregno, "o_fname":o_fname, "o_lname":o_lname})
+    c.execute('''SELECT regno
+                 FROM registrations
+                 WHERE lower(vin)=:vin
+                 AND lower(fname)=:o_fname
+                 AND lower(lname)=:o_fname;''',
+                 {"vin":vin, "o_fname":o_fname, "o_lname":o_lname})
+    regno = c.fetchall()
+
+    if(regno_exists(regno)):
+        c.execute('''UPDATE registrations
+                     SET expiry = date("now")
+                     WHERE regno=:regno;''',
+                     {"regno":regno})
+
+        insertions = (newregno, newplate, vin, new_fname, new_lname)
+        c.execute('''INSERT INTO registrations VALUES(?,date("now"),date("now", "+1 year"),?,?,?,?)''', insertions)
+    else:
+        return
+    conn.commit()
 
 #have a solution here, may need to change it
 def process_payment(tno, amount):
     #can make multiple payments to pay off ticket, but sum cannot exceed total
-    pdate = date.today()
+    pdate = datetime.date.today()
+    if amount < 0:
+        return #cant have a negative poyment 
     create_payment(tno, pdate, amount)
 
     c.execute('''SELECT fine
@@ -112,11 +134,13 @@ def driver_abstract(fname, lname):
     #all within two years or lifetime
 
     #ticket number lifetime
+    fname = fname.lower()
+    lname = lname.lower()
     c.execute('''SELECT count(t.tno)
                  FROM tickets t, persons p, registrations r
                  WHERE t.regno = r.regno
-                 AND lower(r.fname)=:lower(firstname)
-                 AND lower(r.lname)=:lower(lastname)
+                 AND lower(r.fname)=:firstname
+                 AND lower(r.lname)=:lastname
                  AND lower(r.fname) = lower(p.fname)
                  AND lower(r.lname) = lower(p.lname);''',
                 {"firstname":fname, "lastname":lname})
@@ -126,16 +150,16 @@ def driver_abstract(fname, lname):
                  FROM demeritNotices d, persons p
                  WHERE lower(d.fname) = lower(p.fname)
                  AND lower(d.lname) = lower(p.lname)
-                 AND lower(p.fname)=:lower(firstname)
-                 AND lower(p.lname)=:lower(lastname);''',
+                 AND lower(p.fname)=:firstname
+                 AND lower(p.lname)=:lastname;''',
                  {"firstname":fname, "lastname":lname})
     demeritinfo_life = c.fetchall()
 
     c.execute('''SELECT count(t.tno)
                  FROM tickets t, persons p, registrations r
                  WHERE t.regno = r.regno
-                 AND lower(r.fname)=:lower(firstname)
-                 AND lower(r.lname)=:lower(lastname)
+                 AND lower(r.fname)=:firstname
+                 AND lower(r.lname)=:lastname
                  AND lower(r.fname) = lower(p.fname)
                  AND lower(r.lname) = lower(p.lname)
                  AND t.vdate > date("now", "-2 years");''',
@@ -146,19 +170,19 @@ def driver_abstract(fname, lname):
                  FROM demeritNotices d, persons p
                  WHERE lower(d.fname) = lower(p.fname)
                  AND lower(d.lname) = lower(p.lname)
-                 AND lower(p.fname)=:lower(firstname)
-                 AND lower(p.lname)=:lower(lastname)
+                 AND lower(p.fname)=:firstname
+                 AND lower(p.lname)=:lastname
                  AND d.ddate > date("now", "-2 years");''',
                  {"firstname":fname, "lastname":lname})
     demeritinfo_2years = c.fetchall()
 
     #given ticket info, can order asc or desc by date
-    c.execute('''SELECT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
+    c.execute('''SELECT DISTINCT t.tno, t.vdate, t.violation, t.fine, v.make, v.model
                  FROM tickets t, vehicles v, registrations r, persons p
                  WHERE t.regno = r.regno
-                 AND r.vin = v.vin
-                 AND lower(p.fname)=:lower(firstname)
-                 AND lower(p.lname)=:lower(lastname)
+                 AND lower(r.vin) = lower(v.vin)
+                 AND lower(p.fname)=:firstname
+                 AND lower(p.lname)=:lastname
                  AND lower(r.fname) = lower(p.fname)
                  AND lower(r.lname) = lower(p.lname)
                  ORDER BY t.vdate asc;''',
