@@ -36,6 +36,7 @@ def persons_exists(fname, lname):
             return True
     return False
 
+#sees if a regno is in the database
 def regno_exists(regno):
     c.execute('SELECT regno FROM registrations;')
     rows = c.fetchall()
@@ -44,6 +45,7 @@ def regno_exists(regno):
             return True
     return False
 
+#sees if a vin is in the database
 def vin_exists(vin):
     c.execute("SELECT lower(vin) FROM vehicles")
     rows = c.fetchall()
@@ -52,6 +54,9 @@ def vin_exists(vin):
             return True
     return False
 
+#taking in a fname, lname and vin
+#determines if they have owned a specific car and if they
+#are the current owner 
 def is_current_owner(fname, lname, vin):
     fname = fname.lower()
     lname = lname.lower()
