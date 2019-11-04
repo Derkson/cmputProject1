@@ -1,5 +1,7 @@
 from tkinter import *
 from backend import *
+from validation import *
+from agent import *
 from lowerAgentGUIs import *
 
 class BirthGUI:
@@ -47,6 +49,7 @@ class BirthGUI:
         pass
 
     def constructGrid(self):
+        #Construct the ui
         self.master.title("Register a Birth")
 
         self.backButton.grid()
@@ -83,7 +86,7 @@ class BirthGUI:
         pass
 
     def deconstructGrid(self):
-
+        #temporarely destroy the ui
         self.backButton.grid_remove()
         self.submitButton.grid_remove()
 
@@ -109,19 +112,24 @@ class BirthGUI:
         pass
 
     def submitCall(self):
+        #called to submit the birth
         self.mother = (self.MFN.get(),self.MLN.get())
         self.father = (self.FFN.get(),self.FLN.get())
+
+        #check and see if the parents need to be created
         if not persons_exists(fname=self.mother[0],lname=self.mother[1]):
             self.launchNewPerson(title=("Mother",self.mother[0],self.mother[1]))
         if not persons_exists(fname=self.father[0],lname=self.father[1]):
             self.launchNewPerson(title=("Father",self.father[0],self.father[1]))
 
+        #run the registration function and check if the date is wrong
         if (0 == register_birth(fname=self.CFN.get(), lname=self.CLN.get(), gender=self.gender.get(),
         bdate=self.BD.get(), bplace=self.BP.get(), f_fname=self.FFN.get(), f_lname=self.FLN.get(),
         m_fname=self.MFN.get(), m_lname=self.MLN.get(), uid=self.username)):
             self.BD.set("Date in the future")
             return
 
+        #success
         self.quit()
         pass
 
@@ -187,7 +195,7 @@ class MarriageGUI:
         pass
 
     def deconstructGrid(self):
-
+        #temporarely destroy the ui
         self.backButton.grid_remove()
         self.submitButton.grid_remove()
 
@@ -203,8 +211,11 @@ class MarriageGUI:
         pass
 
     def submitCall(self):
+        #Called to submit the marriage
         self.first = (self.FirstFN.get(),self.FirstLN.get())
         self.second = (self.SecondFN.get(),self.SecondLN.get())
+
+        # check and see if the partners need to be created
         if not persons_exists(fname=self.first[0],lname=self.first[1]):
             self.launchNewPerson(title=("First Partner",self.first[0],self.first[1]))
             if not persons_exists(self.first[0],self.first[1]):
@@ -216,6 +227,7 @@ class MarriageGUI:
                 self.FirstFN.set("Aborted Marriage")
                 return
 
+        #Register the marriage
         register_marriage(p1_fname=self.FirstFN.get(), p1_lname=self.FirstLN.get(), p2_fname=self.SecondFN.get(),
         p2_lname=self.SecondLN.get(), uid=self.username)
         self.quit()
@@ -241,6 +253,7 @@ class RegistrationGUI:
         self.master = master
         self.username = username
 
+        #initialize the ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
 
@@ -253,6 +266,7 @@ class RegistrationGUI:
         pass
 
     def constructGrid(self):
+        #Construct the ui
         self.master.title("Renew Vehicle Registration")
 
         self.backButton.grid()
@@ -265,7 +279,7 @@ class RegistrationGUI:
         pass
 
     def deconstructGrid(self):
-
+        #temporarely destroy the ui
         self.backButton.grid_remove()
         self.submitButton.grid_remove()
 
@@ -274,13 +288,16 @@ class RegistrationGUI:
         pass
 
     def submitCall(self):
+        #Called to submit the regno
         try:
             if not regno_exists(int(self.Registration.get())):
                 self.Registration.set("Invalid RegNo")
                 return
-        except ValueError:
+        except ValueError: # failed to convert to int
             self.Registration.set("Not a number")
             return
+
+        #success
         renew_vehicle(self.Registration.get())
         self.Registration.set("Success")
         pass
@@ -298,6 +315,7 @@ class SaleGUI:
         self.master = master
         self.username = username
 
+        #initialize the ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
 
@@ -372,7 +390,7 @@ class SaleGUI:
         pass
 
     def submitCall(self):
-        if not vin_exists(vin=self.VIN.get()):
+        if not vin_exists(vin=self.VIN.get()): #Vehicle doesn't exist
             self.VIN.set("VIN not in database")
             return
 
@@ -391,6 +409,7 @@ class SaleGUI:
             self.SLN.set("")
             return
 
+        #success
         bill_of_sale(vin=self.VIN.get(), o_fname=self.SFN.get(), o_lname=self.SLN.get(),
         new_fname=self.BFN.get(), new_lname=self.BLN.get(), newplate=self.Plate.get())
         self.quit()
@@ -409,6 +428,7 @@ class PaymentGUI:
         self.master = master
         self.username = username
 
+        #initialize the ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
 
@@ -451,7 +471,21 @@ class PaymentGUI:
         pass
 
     def submitCall(self):
-        # TODO: submit
+        try: # to process the payment
+            self.return = process_payment(tno=int(self.Ticket.get()),amount=int(self.Amount.get()))
+            if self.return == 1: # When the amount is over the current
+                self.Amount.set("Paying too much")
+                return
+            if self.return == 0: #When the amount is negative
+                self.Amount.set("No negatives")
+                return
+
+        except ValueError: # failed to convert to int
+            self.Ticket.set("Not a number")
+            self.Amount.set("")
+            return
+
+        #success
         self.quit()
         pass
 
@@ -468,6 +502,7 @@ class DriverGUI:
         self.master = master
         self.username = username
 
+        #Construct the ui elements
         self.backButton = Button(self.master, text="Back",command=self.quit)
         self.submitButton = Button(self.master, text="Submit",command=self.submitCall)
 
@@ -515,10 +550,13 @@ class DriverGUI:
             self.LN.set("")
             return
 
+        # Driver in database: run the abstract
         self.deconstructGrid()
         DriverAbstractGUI(master=self.master,username=self.username,driver=(self.FN.get(),self.LN.get()))
         self.master.mainloop()
-        self.constructGrid()
+
+        # Here the user has come back
+        self.master.quit()
         pass
 
     def quit(self):
