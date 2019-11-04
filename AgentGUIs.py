@@ -118,7 +118,7 @@ class BirthGUI:
         register_birth(fname=self.CFN.get(), lname=self.CLN.get(), gender=self.gender.get(),
         bdate=self.BD.get(), bplace=self.BP.get(), f_fname=self.FFN.get(), f_lname=self.FLN.get(),
         m_fname=self.MFN.get(), m_lname=self.MLN.get(), uid=self.username)
-
+        self.quit()
         pass
 
     def launchNewPerson(self, title):
@@ -214,6 +214,7 @@ class MarriageGUI:
 
         register_marriage(p1_fname=self.FirstFN.get(), p1_lname=self.FirstLN.get(), p2_fname=self.SecondFN.get(),
         p2_lname=self.SecondLN.get(), uid=self.username)
+        self.quit()
         pass
 
     def launchNewPerson(self, title):
