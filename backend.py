@@ -12,14 +12,7 @@ c.execute(' PRAGMA foreign_keys=ON ')
 
 
 def main():
-    '''
-    print(persons_exists("josh", "derkson"))
-    print(persons_exists("chris", "pontikes"))
-    print(vin_exists("u003"))
 
-    bill_of_sale("u003", "josh", "derkson", "chris", "pontikes", "mine")
-    '''
-    print(driver_abstract("chris", "pontikes"))
     conn.commit()
     conn.close()
 
